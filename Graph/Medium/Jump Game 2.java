@@ -106,3 +106,47 @@ class Solution {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int jump(int[] nums) {
+        int n = nums.length;
+        boolean[] vis = new boolean[n];
+        Queue<Integer> q = new LinkedList<>();
+
+        q.offer(0);
+        vis[0] = true;
+
+        int jumps = 0;
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+
+            for (int s = 0; s < size; s++) {
+                int i = q.poll();
+
+                if (i >= n - 1) return jumps;
+
+                for (int step = 1; step <= nums[i]; step++) {
+                    int next = i + step;
+                    if (next < n && !vis[next]) {
+                        vis[next] = true;
+                        q.offer(next);
+                    }
+                }
+            }
+            jumps++;
+        }
+        return -1;
+    }
+}
