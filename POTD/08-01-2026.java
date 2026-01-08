@@ -24,3 +24,48 @@ class Solution {
         return rec(0, 0 , nums1 , nums2);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    int rec(int i , int j , int[] nums1, int[] nums2 , int[][] dp){
+        int n1 = nums1.length;
+        int n2 = nums2.length;
+
+        if(i >= n1 || j >= n2) return Integer.MIN_VALUE;
+
+        if(dp[i][j] != -1) return dp[i][j];
+
+        int mul = nums1[i]*nums2[j] ;
+        int next = rec(i+1, j+1, nums1 , nums2 , dp);
+        if(next != Integer.MIN_VALUE){
+            mul = Math.max(mul , mul + next);
+        }
+
+        mul = Math.max(mul , next);
+
+        int notMul = Math.max( rec(i, j+1, nums1 , nums2 , dp)  , rec(i+1, j, nums1 , nums2 , dp) );
+        
+
+        return dp[i][j] =  Math.max(mul , notMul);
+        
+    }
+
+
+    public int maxDotProduct(int[] nums1, int[] nums2) {
+        int n1 = nums1.length;
+        int n2 = nums2.length;
+        int[][] dp = new int[n1][n2];
+        for(int[]arr:dp)Arrays.fill(arr ,-1);
+        return rec(0, 0 , nums1 , nums2 , dp);
+    }
+}
