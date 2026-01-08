@@ -75,3 +75,34 @@ class Solution {
         return dp[n - 1];
     }
 }
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    int ans = Integer.MAX_VALUE;
+
+    public int jump(int[] nums) {
+        dfs(0, nums, 0);
+        return ans;
+    }
+
+    private void dfs(int i, int[] nums, int jumps) {
+        if (i >= nums.length - 1) {
+            ans = Math.min(ans, jumps);
+            return;
+        }
+
+        if (jumps >= ans) return; // pruning
+
+        for (int step = 1; step <= nums[i]; step++) {
+            dfs(i + step, nums, jumps + 1);
+        }
+    }
+}
