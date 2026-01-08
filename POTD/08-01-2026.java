@@ -20,7 +20,6 @@ class Solution {
         
     }
 
-
     public int maxDotProduct(int[] nums1, int[] nums2) {
         return rec(0, 0 , nums1 , nums2);
     }
