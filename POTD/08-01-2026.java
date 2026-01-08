@@ -69,3 +69,66 @@ class Solution {
         return rec(0, 0 , nums1 , nums2 , dp);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    int rec(int i , int j , int[] nums1, int[] nums2 , int[][] dp){
+        int n1 = nums1.length;
+        int n2 = nums2.length;
+
+        if(i >= n1 || j >= n2) return Integer.MIN_VALUE;
+
+        if(dp[i][j] != -1) return dp[i][j];
+
+        int mul = nums1[i]*nums2[j] ;
+        int next = rec(i+1, j+1, nums1 , nums2 , dp);
+        if(next != Integer.MIN_VALUE){
+            mul = Math.max(mul , mul + next);
+        }
+
+        mul = Math.max(mul , next);
+
+        int notMul = Math.max( rec(i, j+1, nums1 , nums2 , dp)  , rec(i+1, j, nums1 , nums2 , dp) );
+        
+
+        return dp[i][j] =  Math.max(mul , notMul);
+        
+    }
+
+
+    public int maxDotProduct(int[] nums1, int[] nums2) {
+        int n1 = nums1.length;
+        int n2 = nums2.length;
+        int[][] dp = new int[n1+1][n2+1];
+        
+        for(int i = n1-1; i>= 0; i--){
+            for(int j = n2-1; j>= 0; j--){
+                 
+                int mul = nums1[i]*nums2[j] ;
+                 int next = rec(i+1, j+1, nums1 , nums2 , dp);
+                 if(next != Integer.MIN_VALUE){
+                     mul = Math.max(mul , mul + next);
+                 }
+         
+                 mul = Math.max(mul , next);
+         
+                 int notMul = Math.max( rec(i, j+1, nums1 , nums2 , dp)  
+                                       , rec(i+1, j, nums1 , nums2 , dp) );
+
+                 dp[i][j] =  Math.max(mul , notMul);                      
+
+            }
+        }
+        
+        return dp[0][0];
+    }  
+}
