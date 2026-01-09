@@ -97,3 +97,43 @@ class Solution {
         return low;
     }
 }
+
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    boolean check(int[] nums, int maxLimit) {
+        long sum = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if (sum > (long) maxLimit * (i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int minimizeArrayValue(int[] nums) {
+        int low = 0, high = 0;
+        for (int num : nums) high = Math.max(high, num);
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (check(nums, mid)) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+}
