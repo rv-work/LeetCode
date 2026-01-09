@@ -180,3 +180,35 @@ class Solution {
         return jumps;
     }
 }
+
+
+
+
+
+
+class Solution {
+    public int jump(int[] nums) {
+        int n = nums.length;
+        if(n == 1) return 0;
+        int jumps = 0;
+        int farthest = 0;
+        int currEnd = 0;
+        
+        int i = 0;
+        while(i < n){
+           int maxReachTillPoint = farthest;
+           for(int j = currEnd; j<=maxReachTillPoint; j++){
+            farthest = Math.max(farthest , j+nums[j]);
+           }
+           currEnd = maxReachTillPoint+1; 
+           jumps++;
+           // this is becase... maxReachTillPoint yha tak mai phuch skta tha iss jump me ab mujhe iske aage jana hai to 1 jump aur li hogi isi range me se khi se thats why jumps++ and currEnd = maxReachTillPoint+1
+           
+           if(farthest >= n-1) return jumps;
+
+        }
+
+
+        return -1;
+    }
+}
