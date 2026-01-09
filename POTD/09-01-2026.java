@@ -362,9 +362,65 @@ class Solution {
 
     public TreeNode subtreeWithAllDeepest(TreeNode root) {
         Map<TreeNode , Integer> depth = new HashMap<>();
+
         dfsDepth(root , depth , 0);
         
         return dfsAns(root , depth);
         
     }
 }
+
+
+
+
+
+
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    class Out{
+        int height;
+        TreeNode node;
+        Out(int h ,TreeNode node){
+            this.height = h;
+            this.node = node;
+        }
+    }
+        
+    
+        Out dfsAns(TreeNode root){
+            if(root == null) return new Out(0 , null);
+    
+            Out left = dfsAns(root.left );
+            Out right = dfsAns(root.right );
+            
+            if(left.height == right.height ) return new Out(right.height+1 , root);
+            if(left.height > right.height ) return new Out(left.height+1 , left.node);
+            else return new Out(right.height+1 , right.node);
+    
+        }
+    
+        public TreeNode subtreeWithAllDeepest(TreeNode root) {
+            
+            
+            return dfsAns(root).node;
+            
+        }
+    }
