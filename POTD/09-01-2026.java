@@ -321,3 +321,50 @@ class Solution {
         return lastLevel.iterator().next();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    int max = 0;
+
+    void dfsDepth(TreeNode root , Map<TreeNode , Integer> depth , int d){
+        if(root == null) return ;
+       
+       max = Math.max(max , d);
+       depth.put(root , d);
+       dfsDepth(root.left , depth, d+1);
+       dfsDepth(root.right , depth, d+1);
+    }
+
+    TreeNode dfsAns(TreeNode root , Map<TreeNode , Integer> depth){
+        if(root == null) return null;
+        if(depth.get(root) == max) return root;
+
+        TreeNode left = dfsAns(root.left , depth);
+        TreeNode right = dfsAns(root.right , depth);
+        
+        if(left != null && right != null) return root;
+        if(left == null && right == null) return null;
+        return left == null ? right : left;
+
+    }
+
+    public TreeNode subtreeWithAllDeepest(TreeNode root) {
+        Map<TreeNode , Integer> depth = new HashMap<>();
+        dfsDepth(root , depth , 0);
+        
+        return dfsAns(root , depth);
+        
+    }
+}
