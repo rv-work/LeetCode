@@ -49,3 +49,51 @@ class Solution {
         return ans;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    boolean check(int[] nums , int maxLimit){
+      long maxDistribution = 0;   
+      for(int num : nums){
+          if(num < maxLimit) maxDistribution += (long)maxLimit - num;
+          else maxDistribution -= (long)num - maxLimit;
+          if(maxDistribution < 0) return false;
+      }
+      return true;
+    }
+
+    public int minimizeArrayValue(int[] nums) {
+        int low = 0, high = 0;
+        for (int num : nums) high = Math.max(high, num);
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (check(nums, mid)) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+}
