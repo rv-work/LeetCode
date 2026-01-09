@@ -30,3 +30,28 @@ class Solution {
        return true;
     }
 }
+
+
+
+
+
+
+class Solution {
+    public boolean canJump(int[] nums) {
+        if(nums.length==1) return true;
+        boolean zero = false;
+        int requiredJump = 0;
+
+        for(int i = nums.length-2; i >= 0; i--){
+            if(!zero && nums[i] == 0){
+                requiredJump = 2;
+                zero=true;
+                continue;
+            }
+            if(zero && nums[i]>=requiredJump ) zero = false;
+            else requiredJump++;
+               
+        }
+      return !zero;
+    }
+}
