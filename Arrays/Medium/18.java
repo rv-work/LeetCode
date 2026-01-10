@@ -46,3 +46,53 @@ class Solution {
         return ans;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+
+        int n = nums.length;
+        Set<List<Integer>> res = new HashSet<>();
+        Map<Integer, List<int[]>> map = new HashMap<>();
+
+        // store all pair sums
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                int sum = nums[i] + nums[j];
+                map.computeIfAbsent(sum, k -> new ArrayList<>())
+                   .add(new int[]{i, j});
+            }
+        }
+
+        // find complementary pairs
+        for (int s : map.keySet()) {
+            int need = target - s;
+            if (!map.containsKey(need)) continue;
+
+            for (int[] p1 : map.get(s)) {
+                for (int[] p2 : map.get(need)) {
+                    int a = p1[0], b = p1[1];
+                    int c = p2[0], d = p2[1];
+
+                    // indices must be different
+                    if (a != c && a != d && b != c && b != d) {
+                        List<Integer> quad =
+                            Arrays.asList(nums[a], nums[b], nums[c], nums[d]);
+                        Collections.sort(quad);
+                        res.add(quad);
+                    }
+                }
+            }
+        }
+        return new ArrayList<>(res);
+    }
+}
