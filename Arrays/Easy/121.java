@@ -98,3 +98,60 @@ class Solution {
         return dp[idx][bought][sold] = profit;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+
+        int[][][] dp = new int[n + 1][2][2];
+
+        // dp[n][*][*] = 0 already (base case)
+
+        for (int idx = n - 1; idx >= 0; idx--) {
+            for (int bought = 0; bought <= 1; bought++) {
+                for (int sold = 0; sold <= 1; sold++) {
+
+                    // if already sold, no profit possible
+                    if (sold == 1) {
+                        dp[idx][bought][sold] = 0;
+                        continue;
+                    }
+
+                    // option 1: skip
+                    int profit = dp[idx + 1][bought][sold];
+
+                    // option 2: buy
+                    if (bought == 0) {
+                        profit = Math.max(
+                            profit,
+                            -prices[idx] + dp[idx + 1][1][sold]
+                        );
+                    }
+
+                    // option 3: sell
+                    if (bought == 1) {
+                        profit = Math.max(
+                            profit,
+                            prices[idx] + dp[idx + 1][0][1]
+                        );
+                    }
+
+                    dp[idx][bought][sold] = profit;
+                }
+            }
+        }
+
+        return dp[0][0][0];
+    }
+}
