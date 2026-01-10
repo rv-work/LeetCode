@@ -90,3 +90,28 @@ class Solution {
         a[j] = t;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public void sortColors(int[] nums) {
+        int[] temp = new int[nums.length];
+        int idx = 0;
+
+        for (int x : nums) if (x == 0) temp[idx++] = 0;
+        for (int x : nums) if (x == 1) temp[idx++] = 1;
+        for (int x : nums) if (x == 2) temp[idx++] = 2;
+
+        for (int i = 0; i < nums.length; i++) {
+            nums[i] = temp[i];
+        }
+    }
+}
