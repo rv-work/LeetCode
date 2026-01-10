@@ -42,3 +42,29 @@ class Solution {
         return nums;
     }
 }
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int[] rearrangeArray(int[] nums) {
+        int n = nums.length;
+        int pos = 0, neg = 1;
+        while(pos < n && neg < n) {
+            if(nums[pos] >= 0) pos += 2;
+            else if(nums[neg] < 0) neg += 2;
+            else {
+                int temp = nums[pos];
+                nums[pos] = nums[neg];
+                nums[neg] = temp;
+            }
+        }
+        return nums;
+    }
+}
