@@ -58,3 +58,43 @@ class Solution {
         return profit;
     }
 }
+
+class Solution {
+
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        Integer[][][] dp = new Integer[n][2][2];
+        return solve(prices, 0, 0, 0, dp);
+    }
+
+    int solve(int[] prices, int idx, int bought, int sold, Integer[][][] dp) {
+
+        // base case
+        if (idx == prices.length || sold == 1)
+            return 0;
+
+        if (dp[idx][bought][sold] != null)
+            return dp[idx][bought][sold];
+
+        // option 1: skip
+        int profit = solve(prices, idx + 1, bought, sold, dp);
+
+        // option 2: buy (only once)
+        if (bought == 0) {
+            profit = Math.max(
+                profit,
+                -prices[idx] + solve(prices, idx + 1, 1, sold, dp)
+            );
+        }
+
+        // option 3: sell (only once)
+        if (bought == 1 && sold == 0) {
+            profit = Math.max(
+                profit,
+                prices[idx] + solve(prices, idx + 1, 0, 1, dp)
+            );
+        }
+
+        return dp[idx][bought][sold] = profit;
+    }
+}
