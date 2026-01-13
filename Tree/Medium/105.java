@@ -180,3 +180,55 @@ class Solution {
         return build(preorder, 0, inorder.length - 1, new int[]{0}, map);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+
+        if (preorder.length == 0) return null;
+
+        Stack<TreeNode> st = new Stack<>();
+        int inIdx = 0;
+
+        TreeNode root = new TreeNode(preorder[0]);
+        st.push(root);
+
+        for (int i = 1; i < preorder.length; i++) {
+
+            TreeNode node = new TreeNode(preorder[i]);
+
+            if (st.peek().val != inorder[inIdx]) {
+                // left child
+                st.peek().left = node;
+            } else {
+                // pop until parent found
+                TreeNode parent = null;
+                while (!st.isEmpty() && st.peek().val == inorder[inIdx]) {
+                    parent = st.pop();
+                    inIdx++;
+                }
+                parent.right = node;
+            }
+
+            st.push(node);
+        }
+
+        return root;
+    }
+}
