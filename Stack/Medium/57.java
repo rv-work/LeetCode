@@ -141,3 +141,52 @@ class Solution {
         return res.toArray(new int[res.size()][]);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+
+        Stack<int[]> st = new Stack<>();
+
+        for (int[] curr : intervals) {
+
+            // 1️⃣ Before zone: no overlap & strictly left
+            if (curr[1] < newInterval[0]) {
+                st.push(curr);
+            }
+
+            // 2️⃣ After zone: current is strictly right (means new interval finished)
+            else if (curr[0] > newInterval[1]) {
+                st.push(newInterval);
+                newInterval = curr;  // now treat curr as the new interval for rest
+            }
+
+            // 3️⃣ Overlap zone: merge with newInterval
+            else {
+                newInterval[0] = Math.min(newInterval[0], curr[0]);
+                newInterval[1] = Math.max(newInterval[1], curr[1]);
+            }
+        }
+
+        // push the last accumulated newInterval
+        st.push(newInterval);
+
+        // convert to output array
+        int[][] ans = new int[st.size()][2];
+
+        for (int i = st.size() - 1; i >= 0; i--) {
+            ans[i] = st.pop();
+        }
+
+        return ans;
+    }
+}
