@@ -111,3 +111,73 @@ class Solution {
         return max;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public long maximumSumOfHeights(List<Integer> maxHeights) {
+        int n = maxHeights.size();
+
+        Stack<Integer> st = new Stack<>();
+
+        int[] pse = new int[n];
+        int[] nse = new int[n];
+
+        // ---------- PSE ----------
+        for (int i = 0; i < n; i++) {
+            while (!st.isEmpty() && maxHeights.get(st.peek()) >= maxHeights.get(i)) {
+                st.pop();
+            }
+            pse[i] = st.isEmpty() ? -1 : st.peek();
+            st.push(i);
+        }
+
+        st.clear();
+
+        // ---------- NSE ----------
+        for (int i = n - 1; i >= 0; i--) {
+            while (!st.isEmpty() && maxHeights.get(st.peek()) > maxHeights.get(i)) {
+                st.pop();
+            }
+            nse[i] = st.isEmpty() ? n : st.peek();
+            st.push(i);
+        }
+
+        long[] pre = new long[n];
+        long[] suff = new long[n];
+
+        // ---------- PREFIX ----------
+        for (int i = 0; i < n; i++) {
+            pre[i] = (long)(i - pse[i]) * maxHeights.get(i);
+            if (pse[i] != -1) pre[i] += pre[pse[i]];
+        }
+
+        // ---------- SUFFIX ----------
+        for (int i = n - 1; i >= 0; i--) {
+            suff[i] = (long)(nse[i] - i) * maxHeights.get(i);
+            if (nse[i] != n) suff[i] += suff[nse[i]];
+        }
+
+        long ans = 0;
+
+        // ---------- FINAL MAX ----------
+        for (int i = 0; i < n; i++) {
+            ans = Math.max(ans, pre[i] + suff[i] - maxHeights.get(i));
+        }
+
+        return ans;
+    }
+}
