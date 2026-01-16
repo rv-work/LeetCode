@@ -42,3 +42,33 @@ class Solution {
 
 
 
+
+class Solution {
+    public int[] asteroidCollision(int[] asteroids) {
+        Deque<Integer> dq = new ArrayDeque<>();
+
+        for (int a : asteroids) {
+            boolean alive = true;
+
+            while (!dq.isEmpty() && dq.peekLast() > 0 && a < 0) {
+                if (dq.peekLast() < -a) {
+                    dq.pollLast();
+                } else if (dq.peekLast() == -a) {
+                    dq.pollLast();
+                    alive = false;
+                    break;
+                } else {
+                    alive = false;
+                    break;
+                }
+            }
+
+            if (alive) dq.addLast(a);
+        }
+
+        int[] res = new int[dq.size()];
+        int i = 0;
+        for (int x : dq) res[i++] = x;
+        return res;
+    }
+}
