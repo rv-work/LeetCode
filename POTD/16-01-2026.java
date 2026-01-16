@@ -348,3 +348,69 @@ class Solution {
         return (int) ((1L * maxSide * maxSide) % MOD);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    int MOD = 1000000007;
+
+    private List<Integer> getDistances(int total, int[] fences) {
+        Arrays.sort(fences);
+        int len = fences.length;
+
+        // boundaries included
+        int[] arr = new int[len + 2];
+        arr[0] = 1;
+        arr[len + 1] = total;
+
+        for (int i = 0; i < len; i++)
+            arr[i + 1] = fences[i];
+
+        Arrays.sort(arr);
+
+        List<Integer> dist = new ArrayList<>();
+
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = i + 1; j < arr.length; j++) {
+                dist.add(arr[j] - arr[i]);
+            }
+        }
+
+        Collections.sort(dist);
+        return dist;
+    }
+
+    public int maximizeSquareArea(int m, int n, int[] hFences, int[] vFences) {
+
+        List<Integer> hDist = getDistances(m, hFences);
+        List<Integer> vDist = getDistances(n, vFences);
+
+        int i = hDist.size() - 1;
+        int j = vDist.size() - 1;
+
+        int maxSide = 0;
+
+        while (i >= 0 && j >= 0) {
+            if (hDist.get(i).equals(vDist.get(j))) {
+                maxSide = hDist.get(i);
+                break;
+            }
+
+            if (hDist.get(i) > vDist.get(j)) i--;
+            else j--;
+        }
+
+        if (maxSide == 0) return -1;
+
+        long area = 1L * maxSide * maxSide;
+        return (int)(area % MOD);
+    }
+}
