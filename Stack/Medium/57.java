@@ -66,3 +66,40 @@ class Solution {
         return ans;
     }
 }
+
+
+
+
+
+
+
+class Solution {
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        int n = intervals.length;
+
+        // 1️⃣ create array of size n+1
+        int[][] arr = new int[n + 1][2];
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = intervals[i];
+        }
+        arr[n] = newInterval;
+
+        // 2️⃣ sort by start time
+        Arrays.sort(arr, (a, b) -> a[0] - b[0]);
+
+        // 3️⃣ merge intervals
+        List<int[]> res = new ArrayList<>();
+
+        for (int i = 0; i < arr.length; i++) {
+            if (res.isEmpty() || res.get(res.size() - 1)[1] < arr[i][0]) {
+                res.add(arr[i]);
+            } else {
+                res.get(res.size() - 1)[1] =
+                    Math.max(res.get(res.size() - 1)[1], arr[i][1]);
+            }
+        }
+
+        return res.toArray(new int[res.size()][]);
+    }
+}
