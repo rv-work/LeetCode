@@ -42,6 +42,7 @@ class MinStack {
             }
         }
     }
+
     
     public int top() {
         return map.get(idx);
@@ -51,3 +52,38 @@ class MinStack {
         return map.get(st.peek());
     }
 }
+
+
+
+
+
+
+
+
+
+class MinStack {
+    Stack<int[]> st;
+
+    public MinStack() {
+        st = new Stack<>();
+    }
+
+    public void push(int val) {
+        int min = st.isEmpty() ? val : Math.min(val, st.peek()[1]);
+        st.push(new int[]{val, min});
+    }
+
+    public void pop() {
+        st.pop();
+    }
+
+    public int top() {
+        return st.peek()[0];
+    }
+
+    public int getMin() {
+        return st.peek()[1];
+    }
+}
+
+
