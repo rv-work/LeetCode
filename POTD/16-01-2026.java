@@ -285,3 +285,66 @@ class Solution {
 // 📌 One-line intuition (interview gold)
 
 // “We must consider distances between every pair of fences, because the largest square can be formed using non-consecutive cuts.”
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    int MOD = 1000000007;
+
+    // Collect all possible distances between fence positions
+    private Set<Integer> getAllDistances(int total, int[] fences) {
+        int len = fences.length;
+
+        // Include boundaries
+        int[] arr = new int[len + 2];
+        arr[0] = 1;
+        arr[len + 1] = total;
+
+        for (int i = 0; i < len; i++) {
+            arr[i + 1] = fences[i];
+        }
+
+        Arrays.sort(arr);
+
+        Set<Integer> distances = new HashSet<>();
+
+        // Calculate all pair distances
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = i + 1; j < arr.length; j++) {
+                distances.add(arr[j] - arr[i]);
+            }
+        } // this works because 1 and m or n are only fixed... there is nothing fixed in between... there are only removeable only if there are ... so we can assume ki agar gap b/w 1 and 2 then 1 and 3 .. kyunki hm maan rhe ki 1 & 3 ke biche me bhi ht skte hain honge ydi , ya fir honge hi nhi ... thats it
+
+        return distances;
+    }
+
+    public int maximizeSquareArea(int m, int n, int[] hFences, int[] vFences) {
+
+        Set<Integer> hDistances = getAllDistances(m, hFences);
+        Set<Integer> vDistances = getAllDistances(n, vFences);
+
+        int maxSide = 0;
+
+        // Find largest common distance
+        for (int d : hDistances) {
+            if (vDistances.contains(d)) {
+                maxSide = Math.max(maxSide, d);
+            }
+        }
+
+        if (maxSide == 0) return -1;
+
+        return (int) ((1L * maxSide * maxSide) % MOD);
+    }
+}
