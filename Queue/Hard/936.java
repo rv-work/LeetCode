@@ -100,92 +100,79 @@ class Solution {
 
 
 
-
-
-
 class Solution {
     public int[] movesToStamp(String stamp, String target) {
-        int n = target.length();
-        int m = stamp.length();
-
+        int m = stamp.length(), n = target.length();
         char[] S = stamp.toCharArray();
         char[] T = target.toCharArray();
 
-        // For each window: which indices depend on it
-        List<int[]> windows = new ArrayList<>();
+        // Each window info: which chars need to match, which need to star
+        List<Window> windows = new ArrayList<>();
 
-        // Count of non-matching characters in each window
-        int[] mismatch = new int[n - m + 1];
-
-        // For each char in T: which windows include it
+        // For each T index, which windows include it
         List<List<Integer>> posToWindows = new ArrayList<>();
-
         for (int i = 0; i < n; i++) posToWindows.add(new ArrayList<>());
 
-        // Build windows + mismatch count
+        // Build windows
         for (int i = 0; i <= n - m; i++) {
-            int mis = 0;
-            for (int j = 0; j < m; j++) {
-                if (T[i + j] != S[j]) mis++;
-            }
-            mismatch[i] = mis;
-            windows.add(new int[]{i, i + m - 1});
+            List<Integer> notStar = new ArrayList<>();
+            List<Integer> matched = new ArrayList<>();
 
-            // This window affects positions i...i+m-1
             for (int j = 0; j < m; j++) {
+                if (T[i + j] == S[j]) matched.add(i + j);
+                else notStar.add(i + j);
                 posToWindows.get(i + j).add(i);
             }
+            windows.add(new Window(notStar, matched));
         }
 
-        boolean[] visitedWindow = new boolean[n - m + 1];
         boolean[] done = new boolean[n];
-
         Queue<Integer> q = new LinkedList<>();
         List<Integer> ans = new ArrayList<>();
 
-        // Add all windows that have ZERO mismatch → can stamp immediately
+        // Add windows that already match fully
         for (int i = 0; i <= n - m; i++) {
-            if (mismatch[i] == 0) {
-                q.offer(i);
-                visitedWindow[i] = true;
-            }
+            if (windows.get(i).need.size() == 0) q.offer(i);
         }
 
         // BFS
         while (!q.isEmpty()) {
-            int win = q.poll();
-            ans.add(win);
+            int i = q.poll();
+            ans.add(i);
 
-            int start = win;
-            int end = win + m - 1;
-
-            for (int pos = start; pos <= end; pos++) {
+            // Stamp this window → mark its chars as '*'
+            for (int pos : windows.get(i).match) {
                 if (done[pos]) continue;
 
-                done[pos] = true;  // mark this char as '*'
+                done[pos] = true;
 
+                // Affected windows: reduce mismatch count
                 for (int w : posToWindows.get(pos)) {
-                    if (visitedWindow[w]) continue;
-
-                    mismatch[w]--;   // one required char is now '*'
-                    if (mismatch[w] == 0) {
-                        visitedWindow[w] = true;
-                        q.offer(w);
-                    }
+                    Window win = windows.get(w);
+                    win.need.remove(Integer.valueOf(pos));
+                    if (win.need.size() == 0) q.offer(w);
                 }
             }
         }
 
-        // All chars must be '*'
-        for (boolean c : done) {
-            if (!c) return new int[0];
-        }
+        // Check if everything became '*'
+        for (boolean x : done) if (!x) return new int[0];
 
-        // Reverse answer (because BFS gives reverse stamping)
+        // reverse answer
         Collections.reverse(ans);
 
         int[] res = new int[ans.size()];
         for (int i = 0; i < ans.size(); i++) res[i] = ans.get(i);
+
         return res;
+    }
+
+    static class Window {
+        List<Integer> need;   // positions that still mismatch
+        List<Integer> match;  // positions that match
+        Window(List<Integer> need, List<Integer> match) {
+            this.need = need;
+            this.match = match;
+        }
     }
 }
