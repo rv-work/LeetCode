@@ -189,3 +189,12 @@ class Solution {
 
 
 // idea is to maintain the Decreasing order ...in Deque
+// insert always from end
+
+// and if front index is from outdated then remove this ultill the same ...
+// in the front it should be max of valid window...always.
+
+
+// Note....sometimes you may need to remove from back as well becuase if we get e bigger value then last then no sense of having it just remove becuase this new will handle now..
+
+
