@@ -30,3 +30,37 @@ class Solution {
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    public int[] deckRevealedIncreasing(int[] deck) {
+        int n = deck.length;
+        int ans [] = new int[n];
+        Arrays.sort(deck);
+
+        Queue<Integer> q = new LinkedList<>();
+
+        for(int i = 0; i< n; i++){
+           q.add(i);
+        }    
+        
+        int cnt = 0;
+        while(cnt < n){
+           ans[q.poll()] = deck[cnt];
+           q.add(q.poll());
+           cnt++;
+        }   
+
+        return ans;
+
+    }
+}
