@@ -39,3 +39,28 @@ class Solution {
         return circle.get(0);
     }
 }
+
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    int ansIndex(int n , int k){
+        if(n==1) return 0;
+
+        int idx = ansIndex(n-1 , k);
+        idx += k; // to get index in original array
+        idx %= n; // to make circular move
+
+        return idx;
+    }
+    public int findTheWinner(int n, int k) {
+        return ansIndex(n , k) + 1;
+    }
+}
