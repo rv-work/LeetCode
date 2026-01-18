@@ -29,3 +29,29 @@ class Solution {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+
+        if (root == null) return null;
+        if (root == p || root == q) return root;
+
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        // p and q are on different sides → LCA found
+        if (left != null && right != null) return root;
+
+        // Otherwise p and q are either both left or both right
+        if (left != null) return left;
+        return right;
+    }
+}
