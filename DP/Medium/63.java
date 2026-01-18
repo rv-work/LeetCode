@@ -29,3 +29,46 @@ class Solution {
         return rec(0,0,obstacleGrid , dp);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+
+        int[][] dp = new int[m+1][n+1];
+
+        if (obstacleGrid[m - 1][n - 1] == 1) return 0;
+        dp[m - 1][n - 1] = 1;
+
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+
+                if (obstacleGrid[i][j] == 1) {
+                    dp[i][j] = 0;
+                    continue;
+                }
+
+                if (i == m - 1 && j == n - 1) continue;
+
+                int down =  dp[i + 1][j] ;
+                int right = dp[i][j + 1] ;
+
+                dp[i][j] = down + right;
+            }
+        }
+
+        return dp[0][0];
+    }
+}
