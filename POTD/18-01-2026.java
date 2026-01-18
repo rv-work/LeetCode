@@ -1,50 +1,71 @@
 class Solution {
-  boolean check(int[][] gird , int k ,int m, int n){
-         for(int i = 0; i<m-k; i++){
-            for(int j = 0; j<n-k; j++){
-                
-             
-             int lastRow = i+k-1;
-             int firstRow = i;
-             int firstCol = j;
-             int lastCol = j+k-1;
 
-            // rowSum
-             for(int x = firstRow; x <= lastRow-1; x++){
-                 int sum1 = grid[lastCol][x];
-                 if(firstCol-1 >= 0) sum1 - grid[firstCol][x];
-                 int sum2 = grid[lastCol][x+1];
-                 if(firstCol-1 >= 0) sum2 - grid[firstCol][x+1];
-                 if(sum1 != sum2) return false;
-             } 
+    boolean check(int[][] grid, int k, int m, int n) {
 
+        for (int i = 0; i + k <= m; i++) {
+            for (int j = 0; j + k <= n; j++) {
 
-            //colSum
-            
-                
+                int target = 0;
 
+                // first row sum as target
+                for (int c = j; c < j + k; c++) {
+                    target += grid[i][c];
+                }
 
+                // check all rows
+                for (int r = i; r < i + k; r++) {
+                    int sum = 0;
+                    for (int c = j; c < j + k; c++) {
+                        sum += grid[r][c];
+                    }
+                    if (sum != target) {
+                        target = -1;
+                        break;
+                    }
+                }
+                if (target == -1) continue;
+
+                // check all columns
+                for (int c = j; c < j + k; c++) {
+                    int sum = 0;
+                    for (int r = i; r < i + k; r++) {
+                        sum += grid[r][c];
+                    }
+                    if (sum != target) {
+                        target = -1;
+                        break;
+                    }
+                }
+                if (target == -1) continue;
+
+                // main diagonal
+                int d1 = 0;
+                for (int t = 0; t < k; t++) {
+                    d1 += grid[i + t][j + t];
+                }
+                if (d1 != target) continue;
+
+                // anti diagonal
+                int d2 = 0;
+                for (int t = 0; t < k; t++) {
+                    d2 += grid[i + t][j + k - 1 - t];
+                }
+                if (d2 != target) continue;
+    
+                return true; // valid magic square
             }
-         }
+        }
+        return false;
     }
 
-  public int largestMagicSquare(int[][] grid) {
-    int m = grid.length;
-    int n = grid[0].length;
+    public int largestMagicSquare(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
 
-    for (int i = 0; i < m; i++) {
-      int pre = 0;
-      for (int j = 0; j < n; j++) {
-        pre += grid[i][j];
-        grid[i][j] = pre;
-      }
+        for (int k = Math.min(m, n); k >= 1; k--) {
+            if (check(grid, k, m, n)) return k;
+        }
+
+        return 1;
     }
-
-    int start = 1;
-    int end = Math.min(m, n);
-
-    while (start < end) {
-
-    }
-  }
 }
