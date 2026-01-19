@@ -108,9 +108,6 @@ class Solution {
 
 
 
-
-
-
 class Solution {
 
     int[][][] dp;
@@ -128,7 +125,10 @@ class Solution {
             return -10000000; // invalid
 
         // Reached bottom-right
-        if (r1 == n - 1 && c1 == n - 1)
+        if (r1 == n - 1 && c1 == n - 1 ) 
+        // r1 + c1  ==  r2 + c2
+        // Both persons take exactly same number of steps
+        // because they move simultaneously... so 1 phucha to 2 bhi hoga for sure
             return g[r1][c1]; // both must be there now
 
         if (dp[r1][c1][r2] != Integer.MIN_VALUE)
