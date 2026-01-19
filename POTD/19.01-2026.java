@@ -113,3 +113,72 @@ class Solution {
         return l;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    boolean check(int[][] pref, int threshold , int side){
+        if (side == 0) return true;
+        
+        int m = pref.length;
+        int n = pref[0].length;
+
+        for(int i = 0; i <= m - side; i++){
+            for(int j = 0; j <= n - side; j++){
+
+                int firstCol = j;
+                int lastCol = j + side - 1;
+                int firstRow = i;
+                int lastRow = i + side - 1;
+
+                int sum = 0;
+                sum += pref[lastRow][lastCol];
+                if(firstRow > 0 ) sum -= pref[firstRow-1][lastCol];
+                if(firstCol > 0 ) sum -= pref[lastRow][firstCol-1];
+                if(firstRow > 0 && firstCol > 0) sum += pref[firstRow-1][firstCol-1];
+
+                if(sum <= threshold) return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    public int maxSideLength(int[][] mat, int threshold) {
+        int m = mat.length, n = mat[0].length;
+
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(i>0) mat[i][j] += mat[i-1][j];
+                if(j>0) mat[i][j] += mat[i][j-1];
+                if(i>0 && j>0) mat[i][j] -= mat[i-1][j-1];
+            }
+        }
+
+        int l = 0, r = Math.min(m, n);
+
+        while(l < r){
+            int mid = l + (r - l + 1) / 2;  
+            if(check(mat, threshold, mid)){
+                l = mid;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        return l;
+    }
+}
