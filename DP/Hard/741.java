@@ -99,3 +99,62 @@ class Solution {
 // but here down optimal krne me hm up ki optimality khoo dete hai ...
 
 // so not always it gives correct ans .... so hme dono ek sath krne pdeneg 
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    int[][][] dp;
+    int n;
+
+    boolean check(int i, int j, int n, int[][] g) {
+        return i >= 0 && j >= 0 && i < n && j < n && g[i][j] != -1;
+    }
+
+    int dfs(int r1, int c1, int r2, int[][] g) {
+        int c2 = r1 + c1 - r2;  // derived
+
+        // Out of bounds or thorn 
+        if (!check(r1, c1, n, g) || !check(r2, c2, n, g))
+            return -10000000; // invalid
+
+        // Reached bottom-right
+        if (r1 == n - 1 && c1 == n - 1)
+            return g[r1][c1]; // both must be there now
+
+        if (dp[r1][c1][r2] != Integer.MIN_VALUE)
+            return dp[r1][c1][r2];
+
+        // 4 combined moves
+        int best = Math.max(
+                Math.max(dfs(r1 + 1, c1, r2 + 1, g), dfs(r1 + 1, c1, r2, g)),
+                Math.max(dfs(r1, c1 + 1, r2 + 1, g), dfs(r1, c1 + 1, r2, g))
+        );
+
+        int cherries = g[r1][c1];
+        if (r1 != r2 || c1 != c2)   // different cells
+            cherries += g[r2][c2];
+
+        return dp[r1][c1][r2] = cherries + best;
+    }
+
+    public int cherryPickup(int[][] g) {
+        n = g.length;
+        dp = new int[n][n][n];
+
+        for (int[][] a : dp)
+            for (int[] b : a)
+                Arrays.fill(b, Integer.MIN_VALUE);
+
+        return Math.max(0, dfs(0, 0, 0, g));
+    }
+}
