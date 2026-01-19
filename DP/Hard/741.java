@@ -94,9 +94,8 @@ class Solution {
 
 
 
-
 // this is complete solution...... but this does not work
 // optimal is = optimal down + optimal up
 // but here down optimal krne me hm up ki optimality khoo dete hai ...
 
-// so not always it gives correct ans 
+// so not always it gives correct ans .... so hme dono ek sath krne pdeneg 
