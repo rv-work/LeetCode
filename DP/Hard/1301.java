@@ -78,3 +78,76 @@ class Solution {
         return new int[]{max , count};
     }
 }
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    final int MOD = 1_000_000_007;
+
+    boolean check(int i , int j , int n , List<String> b){
+        return i >= 0 && i < n && j >= 0 && j < n && b.get(i).charAt(j) != 'X';
+    }
+
+    int[] res(int i, int j, List<String> b, int[][][] dp){
+        int n = b.size();
+
+        // reached S
+        if(i == n-1 && j == n-1)
+            return new int[]{0, 1};
+
+        // memo
+        if(dp[i][j][0] != Integer.MIN_VALUE)
+            return dp[i][j];
+
+        int[] right = new int[]{-1,0};
+        int[] down  = new int[]{-1,0};
+        int[] diag  = new int[]{-1,0};
+
+        if(check(i+1, j, n, b))
+            down = res(i+1, j, b, dp);
+        if(check(i, j+1, n, b))
+            right = res(i, j+1, b, dp);
+        if(check(i+1, j+1, n, b))
+            diag = res(i+1, j+1, b, dp);
+
+        int best = Math.max(down[0], Math.max(right[0], diag[0]));
+        if(best == -1)
+            return dp[i][j] = new int[]{-1, 0};
+
+        int score = b.get(i).charAt(j) - '0';
+        if(i == 0 && j == 0) score = 0; // E
+
+        long ways = 0;
+        if(down[0] == best)  ways += down[1];
+        if(right[0] == best) ways += right[1];
+        if(diag[0] == best)  ways += diag[1];
+        ways %= MOD;
+
+        dp[i][j][0] = score + best;
+        dp[i][j][1] = (int)ways;
+
+        return dp[i][j];
+    }
+
+    public int[] pathsWithMaxScore(List<String> b) {
+        int n = b.size();
+        int[][][] dp = new int[n][n][2];
+
+        for(int i=0;i<n;i++)
+            for(int j=0;j<n;j++){
+                dp[i][j][0] = Integer.MIN_VALUE;
+                dp[i][j][1] = 0;
+            }
+
+        int[] ans = res(0,0,b,dp);
+        if(ans[0] == -1) return new int[]{0,0};
+        return ans;
+    }
+}
