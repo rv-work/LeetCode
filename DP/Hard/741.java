@@ -158,3 +158,68 @@ class Solution {
         return Math.max(0, dfs(0, 0, 0, g));
     }
 }
+
+
+
+class Solution {
+
+    public int cherryPickup(int[][] g) {
+        int n = g.length;
+        int maxK = 2 * (n - 1);
+
+        // dp[k][r1][r2]
+        int[][][] dp = new int[maxK + 1][n][n];
+
+        for (int k = 0; k <= maxK; k++)
+            for (int i = 0; i < n; i++)
+                Arrays.fill(dp[k][i], Integer.MIN_VALUE);
+
+        dp[0][0][0] = g[0][0];    // both start at (0,0)
+
+        for (int k = 1; k <= maxK; k++) {
+
+            for (int r1 = 0; r1 < n; r1++) {
+                int c1 = k - r1;
+                if (c1 < 0 || c1 >= n) continue;   // out of grid
+                if (g[r1][c1] == -1) continue;      // thorn block
+
+                for (int r2 = 0; r2 < n; r2++) {
+                    int c2 = k - r2;
+                    if (c2 < 0 || c2 >= n) continue;
+                    if (g[r2][c2] == -1) continue;
+
+                    int bestPrev = Integer.MIN_VALUE;
+
+                    // 4 possible previous states:
+
+                    // A (r1−1,c1) from up, B (r2−1,c2) from up
+                    if (r1 > 0 && r2 > 0)
+                        bestPrev = Math.max(bestPrev, dp[k - 1][r1 - 1][r2 - 1]);
+
+                    // A from up, B from left
+                    if (r1 > 0 && c2 > 0)
+                        bestPrev = Math.max(bestPrev, dp[k - 1][r1 - 1][r2]);
+
+                    // A from left, B from up
+                    if (c1 > 0 && r2 > 0)
+                        bestPrev = Math.max(bestPrev, dp[k - 1][r1][r2 - 1]);
+
+                    // A from left, B from left
+                    if (c1 > 0 && c2 > 0)
+                        bestPrev = Math.max(bestPrev, dp[k - 1][r1][r2]);
+
+                    if (bestPrev < 0) continue; // no valid path
+
+                    // cherries collected
+                    int add = g[r1][c1];
+                    if (r1 != r2 || c1 != c2)
+                        add += g[r2][c2];
+
+                    dp[k][r1][r2] = Math.max(dp[k][r1][r2], bestPrev + add);
+                }
+            }
+        }
+
+        return Math.max(0, dp[maxK][n - 1][n - 1]);
+    }
+}
