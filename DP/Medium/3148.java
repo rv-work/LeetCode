@@ -39,3 +39,163 @@ class Solution {
        
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// why this adjacent works.........
+
+// Yes, it is ALWAYS possible.
+// 100% cases.
+// Kabhi fail nahi hota.
+// Kyunki subtraction “telescopic” hoti hai.
+
+// Beech ke saare terms cancel ho jaate hain.
+// Only start value aur end value bachta hai.
+
+// Isliye:
+
+// direct jump score  
+// =  
+// combined adjacent score
+
+
+// ALWAYS TRUE.
+
+
+
+
+
+
+
+
+
+
+// 🌟 WHY is jump score = adjacent score ALWAYS?
+
+// Imagine tum ek number line par chal rahe ho → values steps ki height jaisi hain.
+
+// Example row:
+
+// 5   1   100
+
+
+// Tum jab jump karte ho:
+
+// 5 → 100  
+// score = 100 - 5 = +95
+
+// Ab socho tum beech ke steps se walking karte ho:
+// 5 → 1 → 100
+
+
+// Score:
+
+// (1 - 5) + (100 - 1)
+// = -4 + 99
+// = 95
+
+
+// 💥 SAME RESULT.
+
+// 🧠 CORE INTUITION (Without Math):
+
+// 👉 Jab tum ek number se doosre number tak ja rahe ho,
+// to final difference sirf “starting” aur “ending” numbers par depend karta hai.
+// Beech me kya hua, matter hi nahi karta.
+
+// Why?
+
+// Because every “up” you gain on a step is compensated when you go “down” later.
+
+// Let's visualize the cancellation.
+
+// 🎨 SUPER VISUAL EXAMPLE (Best Explanation)
+
+// Row:
+
+// a   b   c   d
+
+
+// Walking path score:
+
+// (b - a) + (c - b) + (d - c)
+
+
+// Ab dekh cancellation LIVE:
+
+//  b - a  
+//  c - b  
+//  d - c
+// ---------
+//  -a + b - b + c - c + d  
+
+
+// Middle values CUT-CUT-CUT-CUT 😂
+
+// Bach kya?
+
+// d - a
+
+
+// ⭐ EXACTLY equal to jumping a → d.
+
+// 🌈 DEKH, ek real life analogy
+
+// Tum 5th floor par ho → tumko 15th floor jana hai.
+
+// OPTION A (Lift):
+
+// 5 → 15  
+// Difference = +10 floors
+
+
+// OPTION B (Stairs one floor at a time):
+
+// 5 → 6 → 7 → 8 → ... → 15
+
+
+// Net change?
+
+// +1 +1 +1 + … (10 times) = +10 floors
+
+
+// 🤷 Same end-floor difference = same net gain.
+
+// Beech me tum niche/uppar jaao, end points hi matter karte hain.
+
+// 🧩 Ek Ajeeb Example jo proof karta hai
+
+// Row:
+
+// 50, 2, 999, 3, 1000
+
+
+// Jump:
+
+// 1000 - 50 = +950
+
+
+// Adjacent:
+
+// 2 - 50 = -48  
+// 999 - 2 = +997  
+// 3 - 999 = -996  
+// 1000 - 3 = +997  
+// Total = -48 + 997 - 996 + 997 = 950
+
+
+// ✔ EXACT SAME.
+
+// Chahe values kaise bhi crazy ho jaayein —
+// net difference bas first aur last par depend karta hai.
