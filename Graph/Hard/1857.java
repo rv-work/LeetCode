@@ -78,3 +78,62 @@ class Solution {
         return ans;
     }
 }
+
+
+
+
+
+
+
+class Solution {
+
+    public int largestPathValue(String colors, int[][] edges) {
+        int n = colors.length();
+
+        List<List<Integer>> adj = new ArrayList<>();
+        List<int[]> dp = new ArrayList<>();
+        int[] in = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+            dp.add(new int[26]);
+        }
+
+        for (int[] e : edges) {
+            adj.get(e[0]).add(e[1]);
+            in[e[1]]++;
+        }
+
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (in[i] == 0) q.add(i);
+        }
+
+        int ans = 0;
+        int processed = 0;
+
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            processed++;
+
+            int[] mine = dp.get(node);
+            mine[colors.charAt(node) - 'a']++;
+
+            for (int v : mine) ans = Math.max(ans, v);
+
+            for (int nei : adj.get(node)) {
+                int[] fn = dp.get(nei);
+                for (int i = 0; i < 26; i++) {
+                    fn[i] = Math.max(fn[i], mine[i]);
+                }
+                in[nei]--;
+                if (in[nei] == 0) q.add(nei);
+            }
+        }
+
+        // cycle check
+        if (processed < n) return -1;
+
+        return ans;
+    }
+}
