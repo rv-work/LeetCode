@@ -184,3 +184,53 @@ class Solution {
 
 //  best[v] = Math.max(best[v], finish[u]);
 
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    int res( List<List<Integer>> adj ,int node , int[] time ,  int [] finish){
+        if(finish[node] != -1) return finish[node];
+        
+        int maxPre = 0;
+        for(int pre : adj.get(node)){
+            maxPre = Math.max(maxPre , res(adj , pre , time ,  finish));
+        }
+        finish[node] = time[node] + maxPre;
+
+        return finish[node];
+    }
+
+    
+    public int minimumTime(int n, int[][] relations, int[] time) {
+
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) adj.add(new ArrayList<>());
+
+        for (int[] r : relations) {
+            int u = r[0] - 1, v = r[1] - 1;
+            adj.get(v).add(u);
+        }
+
+        int[] finish = new int[n];
+        Arrays.fill(finish , -1);
+        
+        int ans = 0;
+        for(int i = 0; i<n; i++){
+            ans = Math.max(ans , res(adj , i , time , finish)) ; // assume 0 menas 1 node..
+        }
+
+
+        return ans;
+
+    }
+}
+
