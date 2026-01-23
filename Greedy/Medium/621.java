@@ -168,17 +168,16 @@ class Solution {
 
         while(!pq.isEmpty()){
           int cycle = n+1;
-          List<Pair> cycleEle = new ArrayList<>();
+          List<Integer> cycleEle = new ArrayList<>();
 
           while(cycle > 0 && !pq.isEmpty()){
-             Pair p = pq.poll();
-             int freq = p.freq;
-
+             int freq = pq.poll();
+           
              cycle--;
              freq--; 
 
             if(freq  > 0){
-                cycleEle.add(new Pair(p.ch , freq));
+                cycleEle.add(freq);
             }
 
           }
