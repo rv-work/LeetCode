@@ -144,54 +144,101 @@
 
 
 
-class Solution {
+// class Solution {
 
-    public int leastInterval(char[] tasks, int n) {
-        int size = tasks.length;
-        int ans = 0;
+//     public int leastInterval(char[] tasks, int n) {
+//         int size = tasks.length;
+//         int ans = 0;
 
-        Map<Character , Integer> mp = new HashMap<>();
+//         Map<Character , Integer> mp = new HashMap<>();
 
-        for(char ch : tasks){
-            mp.put(ch , mp.getOrDefault(ch , 0) + 1);
-        }
+//         for(char ch : tasks){
+//             mp.put(ch , mp.getOrDefault(ch , 0) + 1);
+//         }
         
-        PriorityQueue<Integer> pq = new PriorityQueue<>(
-            (a,b) -> Integer.compare(b , a) 
-        );
+//         PriorityQueue<Integer> pq = new PriorityQueue<>(
+//             (a,b) -> Integer.compare(b , a) 
+//         );
         
-        for (var entry : mp.entrySet()) {
-            pq.add(entry.getValue());
-        }
+//         for (var entry : mp.entrySet()) {
+//             pq.add(entry.getValue());
+//         }
 
 
 
-        while(!pq.isEmpty()){
-          int cycle = n+1;
-          List<Integer> cycleEle = new ArrayList<>();
+//         while(!pq.isEmpty()){
+//           int cycle = n+1;
+//           List<Integer> cycleEle = new ArrayList<>();
 
-          while(cycle > 0 && !pq.isEmpty()){
-             int freq = pq.poll();
+//           while(cycle > 0 && !pq.isEmpty()){
+//              int freq = pq.poll();
            
-             cycle--;
-             freq--; 
+//              cycle--;
+//              freq--; 
 
-            if(freq  > 0){
-                cycleEle.add(freq);
-            }
+//             if(freq  > 0){
+//                 cycleEle.add(freq);
+//             }
 
-          }
+//           }
 
-          pq.addAll(cycleEle);
+//           pq.addAll(cycleEle);
  
-          if(pq.isEmpty()){
-            ans += n+1 - cycle;
-          }else { 
-            ans += n+1 ;
-          }
+//           if(pq.isEmpty()){
+//             ans += n+1 - cycle;
+//           }else { 
+//             ans += n+1 ;
+//           }
+//         }
+
+
+//         return ans;
+//     }
+// }
+
+
+
+// optimization...........maths based......
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        int[] freq = new int[26];
+
+        // Count frequency of each task
+        for (char ch : tasks) {
+            freq[ch - 'A']++;
         }
 
+        // Find max frequency
+        int maxFreq = 0;
+        for (int f : freq) {
+            maxFreq = Math.max(maxFreq, f);
+        }
 
-        return ans;
+        // Count how many tasks have this max frequency
+        int countMax = 0;
+        for (int f : freq) {
+            if (f == maxFreq) countMax++;
+        }
+
+        // Formula
+        // jitne bhi hain hm aisa maan re ki akhiri me idle lgane ki need nhi hogi but bichr me pd skti to hmen vhi kra ki 1 chod do ab  inko minimum kitna space chahiye ko 1 ko chahiye khud ko add krke n+1 .. so (maxFreq - 1) * (n + 1)... ab last me ye sare ek ek baar fir se aa skte to + countMax
+        // aur chhote vale inhi ke bich me aa jayenge for sure ...
+        int part1 = (maxFreq - 1) * (n + 1) + countMax;
+
+
+
+        // Final answer
+        return Math.max(tasks.length, part1); // o skta hai ki part1 chhota aaye to at last min length to honge hi .........
     }
 }
+
+
