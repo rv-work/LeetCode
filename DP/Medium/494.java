@@ -65,3 +65,57 @@ class Solution {
 }
 
 
+
+
+
+
+
+
+
+import java.util.Arrays;
+
+class Solution {
+    public int findTargetSumWays(int[] nums, int target) {
+        int n = nums.length;
+
+        int total = 0;
+        for (int x : nums) total += x;
+
+        // If target is impossible to reach
+        if (target > total || target < -total) return 0;
+
+        int offset = total;               // shift negative indices
+        int range = 2 * total + 1;        // from -total to +total
+
+        int[][] dp = new int[n + 1][range];
+
+        // Base case: if idx == n, target 0 counts as 1 way
+        dp[n][offset] = 1;
+
+        // Bottom-up
+        for (int idx = n - 1; idx >= 0; idx--) {
+            for (int t = -total; t <= total; t++) {
+
+                int ways = 0;
+
+                // +nums[idx]  → means next target is t + nums[idx]
+                int tPlus = t + nums[idx];
+                if (tPlus >= -total && tPlus <= total) {
+                    ways += dp[idx + 1][tPlus + offset];
+                }
+
+                // -nums[idx] → means next target is t - nums[idx]
+                int tMinus = t - nums[idx];
+                if (tMinus >= -total && tMinus <= total) {
+                    ways += dp[idx + 1][tMinus + offset];
+                }
+
+                dp[idx][t + offset] = ways;
+            }
+        }
+
+        return dp[0][target + offset];
+    }
+}
+
+
