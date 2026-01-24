@@ -119,3 +119,53 @@ class Solution {
 }
 
 
+
+
+
+
+
+import java.util.Arrays;
+
+class Solution {
+    public int findTargetSumWays(int[] nums, int target) {
+        int total = 0;
+        for (int x : nums) total += x;
+
+        // If target impossible
+        if (target > total || target < -total) return 0;
+
+        int offset = total;              // shift negative to 0-based
+        int size = 2 * total + 1;        // range: -total .. +total
+
+        int[] dp = new int[size];
+        dp[offset] = 1;                  // Base case: target = 0
+
+        for (int num : nums) {
+            int[] next = new int[size];
+
+            for (int t = -total; t <= total; t++) {
+                int idx = t + offset;
+
+                if (dp[idx] != 0) {
+                    // +num -> next target = t + num
+                    int tPlus = t + num;
+                    if (tPlus >= -total && tPlus <= total) {
+                        next[tPlus + offset] += dp[idx];
+                    }
+
+                    // -num -> next target = t - num
+                    int tMinus = t - num;
+                    if (tMinus >= -total && tMinus <= total) {
+                        next[tMinus + offset] += dp[idx];
+                    }
+                }
+            }
+
+            dp = next;  // move to next row
+        }
+
+        return dp[target + offset];
+    }
+}
+
+
