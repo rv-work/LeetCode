@@ -89,3 +89,43 @@ class Solution {
         }
     }    
 }
+
+
+
+
+
+
+class Solution {
+    public int numIslands(char[][] grid) {
+        // we need to find the 1 that means land
+        int column = grid[0].length;
+        int numOfIsland = 0;
+
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < column; j++) {
+                if (grid[i][j] == '1') {
+                    //the I call dfs and increment the islandNumber;
+                    dfs(grid, i, j);
+                    numOfIsland++;
+                }
+            }
+
+        }
+
+        return numOfIsland;
+
+    }
+
+    void dfs(char[][] grid, int i, int j) {
+        if (i < 0 || j < 0 || i >= grid.length || j >= grid[0].length || grid[i][j] == '0') {
+            return;
+        }
+
+        //once we read the value then switch to 0
+        grid[i][j] = '0';
+        dfs(grid, i + 1, j); //rigth
+        dfs(grid, i - 1, j); //left
+        dfs(grid, i, j + 1); //up
+        dfs(grid, i, j - 1); //down
+    }
+}
