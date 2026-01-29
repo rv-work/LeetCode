@@ -24,7 +24,8 @@ class Solution {
     public int maxHeight(int[][] cuboids) {
         int n = cuboids.length;
 
-        // ---- STEP 1: sort each cuboid internally ----
+        // ---- STEP 1: sort each cuboid internally ----IMPORTANT...
+        // and we can kyunki ..... ye diya hai ......You can rearrange any cuboid's dimensions by rotating it to put it on another cuboid.
         for (int[] box : cuboids) Arrays.sort(box);
 
         // ---- STEP 2: sort cuboids by (l, w, h) ----
@@ -32,7 +33,7 @@ class Solution {
             if (a[0] != b[0]) return a[0] - b[0];
             if (a[1] != b[1]) return a[1] - b[1];
             return a[2] - b[2];
-        });
+        }); // ye order (0 then 1 then 2) matter krta hai kyunki upar hmne sort kiya hai already ..... isiliye
 
         // dp[idx][last+1]
         int[][] dp = new int[n][n + 1];
