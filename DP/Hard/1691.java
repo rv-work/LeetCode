@@ -42,3 +42,66 @@ class Solution {
         return res(0, -1, cuboids, n , dp);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int maxHeight(int[][] cuboids) {
+        int n = cuboids.length;
+
+        // STEP 1: Sort each cuboid internally
+        for (int[] box : cuboids) Arrays.sort(box);
+
+        // STEP 2: Sort cuboids by (l, w, h)
+        Arrays.sort(cuboids, (a, b) -> {
+            if (a[0] != b[0]) return a[0] - b[0];
+            if (a[1] != b[1]) return a[1] - b[1];
+            return a[2] - b[2];
+        });
+
+        // dp[idx][last+1]
+        int[][] dp = new int[n + 1][n + 1];
+
+        // BASE CASE:
+        // When idx == n --> height = 0 for ANY last
+        for (int last = -1; last < n; last++) {
+            dp[n][last + 1] = 0;
+        }
+
+        // FILL TABLE bottom-up
+        for (int idx = n - 1; idx >= 0; idx--) {
+            for (int last = idx - 1; last >= -1; last--) {
+
+                // ----------- NOT TAKE -----------
+                int notTake = dp[idx + 1][last + 1];
+
+                // ----------- TAKE -----------
+                int take = 0;
+                if (last == -1 ||
+                        (cuboids[idx][0] >= cuboids[last][0] &&
+                         cuboids[idx][1] >= cuboids[last][1] &&
+                         cuboids[idx][2] >= cuboids[last][2])) {
+
+                    take = cuboids[idx][2] + dp[idx + 1][idx + 1];
+                }
+
+                // best
+                dp[idx][last + 1] = Math.max(take, notTake);
+            }
+        }
+
+        // answer = dp[0][-1+1] = dp[0][0]
+        return dp[0][0];
+    }
+}
