@@ -43,28 +43,71 @@ class Solution {
             }
         }
 
+
+// backward..
+        // int len = source.length();
+        // long[] dp = new long[len + 1];
+        // Arrays.fill(dp, Long.MAX_VALUE);
+        // dp[len] = 0;
+
+        // for (int i = len - 1; i >= 0; i--) {
+
+        //     if (source.charAt(i) == target.charAt(i)) {
+        //         dp[i] = dp[i + 1];
+        //     }
+
+        //     for (int size : sizes) {
+        //         int end = i + size;
+        //         int start = i;
+        //         if (end > len){
+        //             continue;
+        //         }
+        //         String subSource = source.substring(start, end);
+        //         String subTarget = target.substring(start, end);
+
+        //         if (subSource.equals(subTarget)) {
+        //             dp[i] = Math.min(dp[i] , dp[end]);
+        //             continue;
+        //         }
+
+        //         if (map.containsKey(subSource) && map.containsKey(subTarget)) {
+        //             int u = map.get(subSource);
+        //             int v = map.get(subTarget);
+        //             long val = mat[u][v];
+        //             if (dp[end] != Long.MAX_VALUE && val != Long.MAX_VALUE) {
+        //                 dp[i] = Math.min(dp[i], val + dp[end]);
+        //             }
+
+        //         }
+        //     }
+        // }
+
+
+
+
+//forward......
         int len = source.length();
         long[] dp = new long[len + 1];
         Arrays.fill(dp, Long.MAX_VALUE);
-        dp[len] = 0;
+        dp[0] = 0;
 
-        for (int i = len - 1; i >= 0; i--) {
+        for (int i = 1; i <=len; i++) {
 
-            if (source.charAt(i) == target.charAt(i)) {
-                dp[i] = dp[i + 1];
+            if (source.charAt(i-1) == target.charAt(i-1)) {
+                dp[i] = dp[i - 1];
             }
 
             for (int size : sizes) {
-                int end = i + size;
-                int start = i;
-                if (end > len){
+                int end = i;
+                int start = i-size;
+                if (start  < 0){
                     continue;
                 }
                 String subSource = source.substring(start, end);
                 String subTarget = target.substring(start, end);
 
                 if (subSource.equals(subTarget)) {
-                    dp[i] = Math.min(dp[i] , dp[end]);
+                    dp[i] = Math.min(dp[i] , dp[start]);
                     continue;
                 }
 
@@ -72,14 +115,15 @@ class Solution {
                     int u = map.get(subSource);
                     int v = map.get(subTarget);
                     long val = mat[u][v];
-                    if (dp[end] != Long.MAX_VALUE && val != Long.MAX_VALUE) {
-                        dp[i] = Math.min(dp[i], val + dp[end]);
+                    if (dp[start] != Long.MAX_VALUE && val != Long.MAX_VALUE) {
+                        dp[i] = Math.min(dp[i], val + dp[start]);
                     }
 
                 }
             }
         }
 
-        return dp[0] == Long.MAX_VALUE ? -1 : dp[0];
+
+        return dp[len] == Long.MAX_VALUE ? -1 : dp[len];
     }
 }
