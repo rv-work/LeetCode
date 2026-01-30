@@ -54,3 +54,36 @@ class Solution {
         return dp[0][0];
     }
 }
+
+
+
+
+
+
+
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        int n1 = text1.length();
+        int n2 = text2.length();
+
+        int curr[] = new int[n2 + 1];
+        int next[] = new int[n2 + 1];
+
+        for (int i = n1 - 1; i >= 0; i--) {
+            for (int j = n2 - 1; j >= 0; j--) {
+
+                int match = Integer.MIN_VALUE;
+                if (text1.charAt(i) == text2.charAt(j)) {
+                    match = 1 + next[j + 1];
+                }
+                int moveI = next[j];
+                int moveJ = curr[j + 1];
+
+                curr[j] = Math.max(match, Math.max(moveI, moveJ));
+            }
+            next = curr.clone();
+        }
+
+        return curr[0];
+    }
+}
