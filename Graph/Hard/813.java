@@ -178,3 +178,83 @@ class Solution {
         return -1;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    public int numBusesToDestination(int[][] routes, int source, int target) {
+
+        if (source == target) return 0;
+
+        int n = routes.length;
+
+        // stop → list of buses
+        Map<Integer, List<Integer>> stopToBuses = new HashMap<>();
+
+        for (int bus = 0; bus < n; bus++) {
+            for (int stop : routes[bus]) {
+                stopToBuses.putIfAbsent(stop, new ArrayList<>());
+                stopToBuses.get(stop).add(bus);
+            }
+        }
+
+        Queue<Integer> q = new LinkedList<>();
+        boolean[] busVisited = new boolean[n];
+        Set<Integer> stopVisited = new HashSet<>();
+
+        // Start from all buses that contain the source
+        if (stopToBuses.containsKey(source)) {
+            for (int bus : stopToBuses.get(source)) {
+                q.add(bus);
+                busVisited[bus] = true;
+            }
+        }
+
+        int busesTaken = 1;
+
+        // BFS over buses
+        while (!q.isEmpty()) {
+
+            int size = q.size();
+
+            while (size-- > 0) {
+
+                int bus = q.poll();
+
+                // check if this bus reaches target
+                for (int stop : routes[bus]) {
+                    if (stop == target) return busesTaken;
+                }
+
+                // explore all stops of this bus
+                for (int stop : routes[bus]) {
+                    if (stopVisited.contains(stop)) continue;
+                    stopVisited.add(stop);
+
+                    // take all buses connected to this stop
+                    for (int nextBus : stopToBuses.get(stop)) {
+                        if (!busVisited[nextBus]) {
+                            busVisited[nextBus] = true;
+                            q.add(nextBus);
+                        }
+                    }
+                }
+            }
+
+            busesTaken++;
+        }
+
+        return -1;
+    }
+}
