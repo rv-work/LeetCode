@@ -42,3 +42,34 @@ class Solution {
 
     }
 }
+
+
+
+
+class Solution {
+    public String convert(String s, int numRows) {
+        if (numRows == 1 || s.length() <= numRows) return s;
+
+        StringBuilder[] rows = new StringBuilder[numRows];
+        for (int i = 0; i < numRows; i++) rows[i] = new StringBuilder();
+
+        int idx = 0;
+        int step = 1; // direction: +1 down, -1 up
+        
+
+        for (char c : s.toCharArray()) {
+            rows[idx].append(c);
+
+            if (idx == 0) step = 1;               // go down
+            else if (idx == numRows - 1) step = -1; // go up
+
+            idx += step;
+        }
+
+        // merge all rows
+        StringBuilder ans = new StringBuilder();
+        for (StringBuilder sb : rows) ans.append(sb);
+
+        return ans.toString();
+    }
+}
