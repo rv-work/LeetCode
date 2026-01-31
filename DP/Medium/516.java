@@ -160,3 +160,65 @@ class Solution {
         return dp[0][n - 1];
     }
 }
+
+
+
+
+
+
+
+
+
+class Solution {
+    int res(int i , int j , String s,  int [][] dp){
+        if(i>j) return 0;
+        if(dp[i][j] != -1) return dp[i][j];
+
+        int moveI = Integer.MIN_VALUE;
+        int moveJ = Integer.MIN_VALUE;
+        int match = Integer.MIN_VALUE;
+
+        if(s.charAt(i) == s.charAt(j)){
+            match = 2 + res(i+1,j-1,s,dp);
+            if(i == j) match -= 1;
+        } else {
+            moveI = res(i+1,j,s,dp);
+            moveJ = res(i,j-1,s,dp);
+        }
+
+        return dp[i][j]= Math.max(match , Math.max(moveI , moveJ));
+    }
+    public int longestPalindromeSubseq(String s) {
+        int n = s.length();
+        int [][] dp = new int[n+1][n+1];
+        for(int [] arr : dp) Arrays.fill(arr, Integer.MIN_VALUE);
+        
+        for(int i = n-1; i>=0; i--){
+            for(int j = 0; j<=i; j++){
+                
+                int moveI = Integer.MIN_VALUE;
+                int moveJ = Integer.MIN_VALUE;
+                int match = Integer.MIN_VALUE;
+        
+                if(s.charAt(i) == s.charAt(j)){
+                    match = 2 ;
+                    if(j > 0 && i<n && dp[i+1][j-1] != Integer.MIN_VALUE)  match += dp[i+1][j-1];
+                    if(i == j) match -= 1;
+                } else {
+                    if(i<n)moveI = dp[i+1][j];
+                    if(j>0) moveJ = dp[i][j-1];
+                }
+                dp[i][j]= Math.max(match , Math.max(moveI , moveJ));
+            }
+        }
+
+        int max = Integer.MIN_VALUE;
+        for(int i = 0; i<n; i++){
+            for(int j = 0; j<n; j++){
+                max = Math.max(max , dp[i][j]);
+            }
+        }
+
+        return max;
+    }
+}
