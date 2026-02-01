@@ -97,3 +97,52 @@ class Solution {
         return dp[n1][n2];
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int minDistance(String w1, String w2) {
+        int n1 = w1.length();
+        int n2 = w2.length();
+
+        // Always keep w2 as the smaller string → min space
+        if (n2 > n1) return minDistance(w2, w1);
+
+        int[] prev = new int[n2 + 1];
+        int[] curr = new int[n2 + 1];
+
+        // Base case: convert "" → w2
+        for (int j = 0; j <= n2; j++) prev[j] = j;
+
+        for (int i = 1; i <= n1; i++) {
+            curr[0] = i; // delete i chars to convert w1[0..i-1] → ""
+
+            for (int j = 1; j <= n2; j++) {
+                if (w1.charAt(i - 1) == w2.charAt(j - 1)) {
+                    curr[j] = prev[j - 1];  // no operation
+                } else {
+                    int insert  = curr[j - 1] + 1;
+                    int delete  = prev[j] + 1;
+                    int replace = prev[j - 1] + 1;
+
+                    curr[j] = Math.min(insert, Math.min(delete, replace));
+                }
+            }
+
+            // Move curr → prev
+            int[] temp = prev;
+            prev = curr;
+            curr = temp;
+        }
+
+        return prev[n2];
+    }
+}
