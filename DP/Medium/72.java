@@ -60,3 +60,40 @@ class Solution {
         return res(0,0,w1,w2,n1,n2,dp);
     }
 }
+
+
+
+
+
+
+
+class Solution {
+    public int minDistance(String w1, String w2) {
+        int n1 = w1.length();
+        int n2 = w2.length();
+
+        int[][] dp = new int[n1 + 1][n2 + 1];
+
+        // Base cases
+        for (int i = 0; i <= n1; i++) dp[i][0] = i; // delete all chars
+        for (int j = 0; j <= n2; j++) dp[0][j] = j; // insert all chars
+
+        // Fill table
+        for (int i = 1; i <= n1; i++) {
+            for (int j = 1; j <= n2; j++) {
+
+                if (w1.charAt(i - 1) == w2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1]; // no change
+                } else {
+                    int insert  = dp[i][j - 1] + 1;
+                    int delete  = dp[i - 1][j] + 1;
+                    int replace = dp[i - 1][j - 1] + 1;
+
+                    dp[i][j] = Math.min(insert, Math.min(delete, replace));
+                }
+            }
+        }
+
+        return dp[n1][n2];
+    }
+}
