@@ -171,3 +171,105 @@ class Solution {
         return result;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        // 1. Sort accounts by Name so duplicates are adjacent (Your Logic)
+        Collections.sort(accounts, (a, b) -> a.get(0).compareTo(b.get(0)));
+
+        // 'ans' stores the Sets of emails. 
+        // We need a parallel list 'ownerNames' because List<String, Set> is invalid Java.
+        List<Set<String>> ans = new ArrayList<>();
+        List<String> ownerNames = new ArrayList<>();
+        
+        // Your map to find where a name starts in the 'ans' list
+        Map<String, Integer> nameToStart = new HashMap<>();
+
+        int n = accounts.size();
+        
+        for (int j = 0; j < n; j++) {
+            List<String> row = accounts.get(j);
+            String name = row.get(0);
+            
+            // Extract emails from current row
+            Set<String> rowEmails = new HashSet<>();
+            for(int k = 1; k < row.size(); k++) rowEmails.add(row.get(k));
+
+            int startingIndex = -1;
+            if (nameToStart.containsKey(name)) {
+                startingIndex = nameToStart.get(name);
+            }
+
+            if (startingIndex == -1) {
+                // Case 1: Name never seen before. Add new group.
+                nameToStart.put(name, ans.size()); // Store index
+                ans.add(rowEmails);
+                ownerNames.add(name);
+            } else {
+                // Case 2: Name exists. Check all groups belonging to this name.
+                List<Integer> matchedIndices = new ArrayList<>();
+                
+                // Start from where this name begins in 'ans'
+                for (int x = startingIndex; x < ans.size(); x++) {
+                    // Since we sorted, if name changes, we can stop
+                    if (!ownerNames.get(x).equals(name)) break;
+
+                    // Check if 'row' shares ANY email with group 'x'
+                    Set<String> existingGroup = ans.get(x);
+                    boolean overlap = false;
+                    for (String email : rowEmails) {
+                        if (existingGroup.contains(email)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+
+                    if (overlap) {
+                        matchedIndices.add(x);
+                    }
+                }
+
+                if (matchedIndices.isEmpty()) {
+                    // No overlap found with existing groups -> Create new group
+                    ans.add(rowEmails);
+                    ownerNames.add(name);
+                } else {
+                    // Overlap found! 
+                    // CRITICAL: We might match multiple groups. Merge them all into the first match.
+                    int firstIdx = matchedIndices.get(0);
+                    ans.get(firstIdx).addAll(rowEmails);
+
+                    // If matches > 1, merge those groups into firstIdx and clear them
+                    for (int k = 1; k < matchedIndices.size(); k++) {
+                        int otherIdx = matchedIndices.get(k);
+                        ans.get(firstIdx).addAll(ans.get(otherIdx));
+                        ans.get(otherIdx).clear(); // Mark as empty to skip later
+                    }
+                }
+            }
+        }
+
+        // Final Output Formatting
+        List<List<String>> result = new ArrayList<>();
+        for (int i = 0; i < ans.size(); i++) {
+            if (!ans.get(i).isEmpty()) {
+                List<String> sortedEmails = new ArrayList<>(ans.get(i));
+                Collections.sort(sortedEmails);
+                sortedEmails.add(0, ownerNames.get(i));
+                result.add(sortedEmails);
+            }
+        }
+
+        return result;
+    }
+}
