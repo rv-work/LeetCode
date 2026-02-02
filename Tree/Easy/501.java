@@ -123,3 +123,97 @@ class Solution {
     // 0     4   7     9
     //      / \
     //     2   6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    int maxFreq = 0;
+    int currFreq = 0;
+    Integer prev = null;
+    List<Integer> ans = new ArrayList<>();
+
+    // FIRST PASS → find max frequency using inorder
+    void func(TreeNode root) {
+        if (root == null) return;
+
+        func(root.left);
+
+        // PROCESS CURRENT NODE
+        if (prev == null || prev != root.val) {
+            currFreq = 1;
+        } else {
+            currFreq++;
+        }
+
+        maxFreq = Math.max(maxFreq, currFreq);
+
+        prev = root.val;
+
+        func(root.right);
+    }
+
+    // SECOND PASS → fill modes using same inorder
+    void fill(TreeNode root) {
+        if (root == null) return;
+
+        fill(root.left);
+
+        if (prev == null || prev != root.val) {
+            currFreq = 1;
+        } else {
+            currFreq++;
+        }
+
+        if (currFreq == maxFreq) ans.add(root.val);
+
+        prev = root.val;
+
+        fill(root.right);
+    }
+
+    public int[] findMode(TreeNode root) {
+        // PASS 1
+        func(root);
+
+        // reset for PASS 2
+        prev = null;
+        currFreq = 0;
+
+        // PASS 2
+        fill(root);
+
+        int arr[] = new int[ans.size()];
+        int i = 0;
+
+        for (int ele : ans) arr[i++] = ele;
+
+        return arr;
+    }
+}
