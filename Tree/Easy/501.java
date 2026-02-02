@@ -217,3 +217,87 @@ class Solution {
         return arr;
     }
 }
+
+
+
+
+
+
+
+
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */class Solution {
+    public int[] findMode(TreeNode root) {
+        // state[0] = maxFreq, state[1] = currFreq, state[2] = prevVal
+        // We use an Integer array for state[2] to handle the 'null' initial case
+        int[] maxFreqArr = {0};
+        int[] currFreqArr = {0};
+        Integer[] prevArr = {null};
+
+        // PASS 1: Find maxFreq
+        findMax(root, maxFreqArr, currFreqArr, prevArr);
+
+        // Reset for PASS 2
+        currFreqArr[0] = 0;
+        prevArr[0] = null;
+        List<Integer> modes = new ArrayList<>();
+
+        // PASS 2: Collect modes
+        collectModes(root, maxFreqArr[0], currFreqArr, prevArr, modes);
+
+        // Convert List to int[]
+        int[] result = new int[modes.size()];
+        for (int i = 0; i < modes.size(); i++) result[i] = modes.get(i);
+        return result;
+    }
+
+    private void findMax(TreeNode node, int[] maxFreq, int[] currFreq, Integer[] prev) {
+        if (node == null) return;
+
+        findMax(node.left, maxFreq, currFreq, prev);
+
+        if (prev[0] == null || prev[0] != node.val) {
+            currFreq[0] = 1;
+        } else {
+            currFreq[0]++;
+        }
+        maxFreq[0] = Math.max(maxFreq[0], currFreq[0]);
+        prev[0] = node.val;
+
+        findMax(node.right, maxFreq, currFreq, prev);
+    }
+
+    private void collectModes(TreeNode node, int maxFreq, int[] currFreq, Integer[] prev, List<Integer> modes) {
+        if (node == null) return;
+
+        collectModes(node.left, maxFreq, currFreq, prev, modes);
+
+        if (prev[0] == null || prev[0] != node.val) {
+            currFreq[0] = 1;
+        } else {
+            currFreq[0]++;
+        }
+        
+        if (currFreq[0] == maxFreq) {
+            modes.add(node.val);
+        }
+        prev[0] = node.val;
+
+        collectModes(node.right, maxFreq, currFreq, prev, modes);
+    }
+}
