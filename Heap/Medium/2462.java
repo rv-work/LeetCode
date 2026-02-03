@@ -64,3 +64,48 @@ class Solution {
 
   }
 }
+
+
+
+
+
+
+
+
+
+class Solution {
+    public long totalCost(int[] costs, int k, int candidates) {
+        PriorityQueue<Integer> left = new PriorityQueue<>();
+        PriorityQueue<Integer> right = new PriorityQueue<>();
+
+        int n = costs.length;
+
+        int i = 0;
+        int j = n - 1;
+
+        while (i < candidates && i <= j) {
+            left.add(costs[i++]);
+        }
+
+        while (j >= n - candidates && i <= j) {
+            right.add(costs[j--]);
+        }
+        long ans = 0;
+
+        for (int x = 0; x < k; x++) {
+            int lelem = left.isEmpty() ? Integer.MAX_VALUE : left.peek();
+            int relem = right.isEmpty() ? Integer.MAX_VALUE : right.peek();
+
+            if (lelem <= relem) {
+                ans += left.poll();
+                if (i <= j)
+                    left.add(costs[i++]);
+            } else {
+                ans += right.poll();
+                if (i <= j)
+                    right.add(costs[j--]);
+            }
+        }
+        return ans;
+    }
+}
