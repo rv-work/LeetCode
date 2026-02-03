@@ -71,3 +71,54 @@ class Solution {
         return latestStep;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int findLatestStep(int[] arr, int m) {
+        int n = arr.length;
+        // length[i] stores the length of the group ending or starting at index i
+        int[] length = new int[n + 2]; /// diff Array type.....
+        int count = 0; // Tracks how many groups of size 'm' currently exist
+        int latestStep = -1;
+
+        for (int i = 0; i < n; i++) {
+            int pos = arr[i];
+            
+            // 1. Get lengths of adjacent groups (if they exist)
+            int left = length[pos - 1];
+            int right = length[pos + 1];
+            
+            // 2. Calculate the new merged length
+            int newLen = left + right + 1;
+            
+            // 3. Update the "Start" and "End" of this new large group
+            // pos - left is the start index of the left group
+            // pos + right is the end index of the right group
+            length[pos - left] = newLen;
+            length[pos + right] = newLen;
+
+            // 4. Update the count of groups of size m
+            // If an adjacent group had size m, it's now merged (destroyed), so decrement
+            if (left == m) count--;
+            if (right == m) count--;
+            // If the new merged group is size m, increment
+            if (newLen == m) count++;
+
+            // 5. If groups of size m exist, update latestStep
+            if (count > 0) {
+                latestStep = i + 1;
+            }
+        }
+        
+        return latestStep;
+    }
+}
