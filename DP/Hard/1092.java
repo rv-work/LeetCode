@@ -194,3 +194,78 @@ class Solution {
 //  Ensures both strings appear inside
 //  Ensures shortest length because we follow LCS
 //  Final leftover parts are appended
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public String shortestCommonSupersequence(String str1, String str2) {
+        int n = str1.length();
+        int m = str2.length();
+
+        int[][] dp = new int[n + 1][m + 1];
+
+        // build lcs.......
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= m; j++) {
+                if (i == 0 || j == 0) {
+                    dp[i][j] = 0;
+                } else if (str1.charAt(i - 1) == str2.charAt(j - 1)) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+
+       
+        StringBuilder sb = new StringBuilder();
+        int i = n, j = m;
+
+        while (i > 0 && j > 0) {
+            // Case 1: Match found (It's part of LCS)
+            // Add the character once and move diagonally up-left
+            if (str1.charAt(i - 1) == str2.charAt(j - 1)) {
+                sb.append(str1.charAt(i - 1));
+                i--;
+                j--;
+            } 
+            // Case 2: Mismatch
+            // We go towards the larger LCS value. The character we LEAVE BEHIND
+            // is not in LCS, so we must add it to the Supersequence explicitly.
+            else if (dp[i - 1][j] > dp[i][j - 1]) {
+                sb.append(str1.charAt(i - 1)); // Take from str1
+                i--;
+            } else {
+                sb.append(str2.charAt(j - 1)); // Take from str2
+                j--;
+            }
+        }
+
+        // 3. Collect remaining characters
+        // If one string finishes early, dump the rest of the other string
+        while (i > 0) {
+            sb.append(str1.charAt(i - 1));
+            i--;
+        }
+        while (j > 0) {
+            sb.append(str2.charAt(j - 1));
+            j--;
+        }
+
+        // 4. Reverse (because we built it backwards)
+        return sb.reverse().toString();
+    }
+}
