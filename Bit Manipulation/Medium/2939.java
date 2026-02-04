@@ -43,3 +43,62 @@ class Solution {
         return (int) ((xXORa * xXORb) % MOD);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int maximumXorProduct(long a, long b, int n) {
+        long xXORa = 0;
+        long xXORb = 0;
+        long MOD = 1000000007;
+
+
+        for(int i = 49; i>=n; i--){
+            xXORa |= ((1l<<i) & a);
+            xXORb |= ((1l<<i) & b);
+        }
+
+        for(int i = n-1; i >=0; i--){ // ye n-1 -> 0... hi hona chahiye ... ye ****imp hai ......kyunki same nhi hone pr hme chhote ko bda bnana hai .......
+            long ith_a = ((1L<<i) & a);
+            long ith_b = ((1L<<i) & b);
+
+            if(ith_a == ith_b){
+                xXORa |= (1L<<i);
+                xXORb |= (1L<<i);
+            } else {
+                if(xXORa < xXORb){
+                    xXORa |= (1L<<i);
+                } else {
+                    xXORb |= (1L<<i);
+                }
+            }
+        }
+
+        xXORa %= MOD;
+        xXORb %= MOD;
+        long ans = (xXORa * xXORb) % MOD;
+
+
+        return (int) ans;
+    }
+}
+
+
+
+/// motive is build bit by bit .....kisi bhi number me jitni jayada bit set hongi utni bdi value hogi .... so koshish hai ki dono me max to max set bit lane ka try krna..... ab agar dono ki koi ith bit same hai to matlab mai apne hisab se kuch bhi value rkh kr kaise bhi unhe set kr skte hain .... but same nhi hai to hm try krengee ki chhoti vali value ko bdhaye.... usi ke lie hm sara game kr rhe hain ......
