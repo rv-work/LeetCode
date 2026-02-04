@@ -36,3 +36,18 @@ class Solution {
 // 0111 1111 1111 1111 1111 1111 1111 1111 (2147483647)
 
 // prefix = 0000 0000 0000 0000 0000 0000 0000 0000 (0)
+
+
+
+
+
+/*
+Why this “common prefix” logic works?
+
+Because in the range [left, right], if any bit flips even once (0→1 or 1→0)
+while counting up from left to right, that entire bit-position becomes 0
+in the final AND.
+
+Only the highest bits that remain identical for EVERY number in the range survive.
+Those identical bits form the common prefix.
+*/
