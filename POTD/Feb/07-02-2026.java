@@ -132,3 +132,31 @@ class Solution {
         return ans;
     }
 }
+
+
+
+
+
+
+class Solution {
+    public int minimumDeletions(String s) {
+        int n = s.length();
+
+
+        int cntA = 0;
+        for (int i = n - 1; i >= 0; i--) {
+             if(s.charAt(i) == 'a') cntA++;
+        }
+
+        int ans = Integer.MAX_VALUE;
+
+        int cntB = 0;
+        for (int i = 0; i < n; i++) {
+            if(s.charAt(i) == 'a') cntA--; // ise phle hi remove krna jaruri hai kyunki.right side (!=self)
+            ans = Math.min(ans,  cntB + cntA);
+            if(s.charAt(i) == 'b') cntB++;
+        }
+
+        return ans;
+    }
+}
