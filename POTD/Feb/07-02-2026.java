@@ -98,3 +98,37 @@ class Solution {
         return ans;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int minimumDeletions(String s) {
+        int n = s.length();
+
+        int[] suffA = new int[n];
+
+        int cnt = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            suffA[i] = cnt;
+             if(s.charAt(i) == 'a') cnt++;
+        }
+
+        int ans = Integer.MAX_VALUE;
+
+        int cntB = 0;
+        for (int i = 0; i < n; i++) {
+            ans = Math.min(ans,  cntB + suffA[i]);
+            if(s.charAt(i) == 'b') cntB++;
+        }
+
+        return ans;
+    }
+}
