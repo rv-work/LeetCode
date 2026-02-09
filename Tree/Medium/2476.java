@@ -58,9 +58,6 @@ class Solution {
 
 
 
-
-
-
 class Solution {
     void inorder(List<Integer> in, TreeNode root) {
         if (root == null) return;
@@ -95,7 +92,7 @@ class Solution {
 // ye int idx = Collections.binarySearch(in, x);..... jo idx deta hai ye insertion point deta hai matlan ki -insertionpoint - 1.... to isi ko balance krne ke liye hm baaad me   idx = -idx - 1; ... aisa krte hain 
 
 
-
+//............INSERTION POINT MATLAB .... KAHA PR HONA CHAHYE THA .............
 
 
 // 🎯 SABSE PEHLE: insertion point kya hota hai?
