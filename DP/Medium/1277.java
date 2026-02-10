@@ -40,3 +40,50 @@ class Solution {
         return ans;
     }
 }
+
+
+
+
+
+
+
+
+
+class Solution {
+
+    int countSquaresAt(int rs, int cs, int[][] pref) {
+        int n = pref.length - 1;
+        int m = pref[0].length - 1;
+        int count = 0;
+
+        for (int k = 1; rs + k <= n && cs + k <= m; k++) {
+            int r2 = rs + k, c2 = cs + k;
+            int r1 = rs, c1 = cs;
+
+            int sum = pref[r2][c2] - pref[r1][c2] - pref[r2][c1] + pref[r1][c1];
+            if (sum == k * k) count++;
+            else break;
+        }
+        return count;
+    }
+
+    public int countSquares(int[][] mat) {
+        int n = mat.length, m = mat[0].length;
+
+        int[][] pref = new int[n + 1][m + 1];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                pref[i + 1][j + 1] = mat[i][j] + pref[i][j + 1] + pref[i + 1][j] - pref[i][j];
+            }
+        }
+
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                ans += countSquaresAt(i, j, pref);
+            }
+        }
+
+        return ans;
+    }
+}
