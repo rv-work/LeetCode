@@ -146,6 +146,62 @@ class Solution {
 
 
 
+class Solution {
+
+    int res(int i, int j, char[][] matrix, int[][] dp) {
+
+        int n = matrix.length;
+        int m = matrix[0].length;
+
+        // Out of bounds
+        if (i >= n || j >= m) return 0;
+
+        // Already computed
+        if (dp[i][j] != -1) return dp[i][j];
+
+        // If current is 0, cannot form square
+        if (matrix[i][j] == '0') {
+            dp[i][j] = 0;
+            return 0;
+        }
+
+        // Recursive calls:
+        int right = res(i, j + 1, matrix, dp);
+        int down = res(i + 1, j, matrix, dp);
+        int diag = res(i + 1, j + 1, matrix, dp);
+
+        // current cell contributes +1
+        int best = 1 + Math.min(right, Math.min(down, diag));
+
+        dp[i][j] = best;
+        return best;
+    }
+
+    public int maximalSquare(char[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+
+        int[][] dp = new int[n][m];  // 0 = uncomputed
+        for (int[] row : dp) {
+            Arrays.fill(row, -1);
+        }
+
+        int ans = 0; 
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                ans = Math.max(ans, res(i, j, matrix, dp));
+            }
+        }
+
+        return ans * ans;     // return AREA
+    }
+
+   
+}
+
+
+
 
 
 
@@ -207,3 +263,13 @@ class Solution {
 
 
 
+// If even one of the neighbors is 0, you cannot extend the square, so dp becomes 1 only.
+// To get 2, all three must be ≥ 1.
+
+// Exactly true.
+
+// So the formula naturally enforces this rule:
+
+// If any side is broken: you stay at 1
+
+// If all are strong: you grow +1
