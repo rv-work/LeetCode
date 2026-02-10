@@ -139,3 +139,71 @@ class Solution {
         return maxArea;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int maximalSquare(char[][] matrix) {
+        if (matrix == null || matrix.length == 0) return 0;
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int[][] dp = new int[n][m];
+        int maxSide = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (matrix[i][j] == '1') {
+                    if (i == 0 || j == 0) {
+                        dp[i][j] = 1; // Boundary handling
+                    } else {
+                        // Min of (Top, Left, Top-Left) + 1
+                        dp[i][j] = Math.min(Math.min(dp[i-1][j], dp[i][j-1]), dp[i-1][j-1]) + 1;
+                    }
+                    maxSide = Math.max(maxSide, dp[i][j]);
+                }
+            }
+        }
+        return maxSide * maxSide; // Area return karna hai
+    }
+}
+
+// ye kaam krta hai kyunki 
+
+// let say 
+
+// 0 0
+// 0 ?  =====> is case me .min = 0 so .. 1 aayega ok ..
+
+// 1 0
+// 0 ?  =====> is case me .. min = 0... 1 aayega ok ..
+
+// 1 1
+// 0 ?  =====> is case me .. min = 0... 1 aayega ok ..
+
+// 1 1
+// 1 ?  =====> is case me .. min = 0... 2 aayega ok ..
+
+
+// agar koi 1 bhi zero hai matlab vo bn nhi payeag to vo 0+1 = 1 hi dega sirf khud ko 
+
+// ye 2 sirf aur sirf tabhi hoga sab uske teeno 1 honge which is also fine na .... ki 2 ka bn skta for sure.... thats it/.....
+
+// this is how/..
+
+
+
