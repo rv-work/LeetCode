@@ -67,3 +67,75 @@ class Solution {
         return max;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    int res(int rs, int cs, int[][] pref) {
+        int n = pref.length - 1; 
+        int m = pref[0].length - 1;
+        int maxSq = 0;
+
+        for (int k = 1; rs + k <= n && cs + k <= m; k++) {
+         
+            int r2 = rs + k;
+            int c2 = cs + k;
+            
+            int r1 = rs;
+            int c1 = cs;
+
+
+            int totalOnes = pref[r2][c2] - pref[r1][c2] - pref[r2][c1] + pref[r1][c1];
+
+            int req = k * k; 
+
+            if (totalOnes == req) {
+                maxSq = Math.max(maxSq, req);
+            } else {
+               
+                break; 
+            }
+        }
+        return maxSq;
+    }
+
+    public int maximalSquare(char[][] matrix) {
+        if (matrix == null || matrix.length == 0) return 0;
+        int n = matrix.length;
+        int m = matrix[0].length;
+        
+   
+        int[][] pref = new int[n + 1][m + 1];
+
+        //2D Prefix Sum
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                pref[i + 1][j + 1] = (matrix[i][j] - '0') 
+                                   + pref[i][j + 1] 
+                                   + pref[i + 1][j] 
+                                   - pref[i][j];
+            }
+        }
+
+        int maxArea = 0;
+
+        // 3. Check every cell as a top-left corner
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                maxArea = Math.max(maxArea, res(i, j, pref));
+            }
+        }
+
+        return maxArea;
+    }
+}
