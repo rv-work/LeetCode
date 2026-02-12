@@ -1,5 +1,40 @@
 
 class Solution {
+    public int numTrees(int n) {
+        // dp[i] stores the number of unique BSTs with 'i' nodes
+        int[] dp = new int[n + 1];
+
+        // Base cases
+        dp[0] = 1; // Empty tree = 1 way
+        dp[1] = 1; // Single node = 1 way
+
+        // Calculate for all sizes from 2 up to n
+        for (int nodes = 2; nodes <= n; nodes++) {
+            // Try making every number 'root' from 1 to 'nodes'
+            for (int root = 1; root <= nodes; root++) {
+                
+                // Left side has (root - 1) nodes
+                int left = dp[root - 1];
+                
+                // Right side has (total nodes - root) nodes
+                int right = dp[nodes - root];
+                
+                // Cartesian product: combination = left * right
+                dp[nodes] += left * right;
+            }
+        }
+
+        return dp[n];
+    }
+}
+
+
+
+
+
+
+
+class Solution {
 
     public int numTrees(int n) {
         int[] dp = new int[n + 1];
