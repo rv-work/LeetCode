@@ -1,91 +1,225 @@
+// class Solution {
+//     public int longestBalanced(int[] nums) {
+//         int n = nums.length;
+//         int max = 0;
+//         Map<Integer, Integer> map = new HashMap<>();
+//         Set<Integer> set = new HashSet<>();
+
+
+//         map.put(0,-1);
+//         int cnt = 0;
+
+//         for(int i = 0; i<n; i++){
+
+//             if(!set.contains(nums[i])){
+//               if(nums[i] % 2 == 0) cnt++;
+//               else cnt--;
+//             }
+
+//             if(map.containsKey(cnt)){
+//                 max = Math.max(max , i-map.get(cnt));
+//             } else {
+//                 map.put(cnt , i);
+//             }
+
+//             set.add(nums[i]);
+//         }
+
+
+//         return max;
+//     }
+// }
+
+// the only problem is that ..... yha aise global presum kaam nhi krega ..... kyunki .. duplicates ko add nhi kr skte hin apne prefixsum me to usse problem ye aayegi ki same sum kafi bar milega jabki vha uska ye matlab nhi hai ki unke bich ka sum 0 tha ..... .... to ye possible hi nhi ki ek global variable lekar chale aur ho jaye .... because of distinct only sum ....... to presum lena fir pichhe check krna ye kaam nhi krega .... ki just keep adding in presum and keep checking whether this sum exist or not ...... so now hme yha pr manually .... hr index pr jane ke baad vha jo sum milega vha ke liye store krke ... to hme hr bar dekhna pdega ki kya iss index ko include krke 0 se i tak me bnne vale sare subarray me se kisi ka sum 0 aa rha hai kya .......... if yes then only hm kh skte ki hain .... chije shi hain .... so at last n^2..... aur vo kuch aisa hai ......
+
+
+
+
+
+// class Solution {
+//     public int longestBalanced(int[] nums) {
+//         int n = nums.length;
+//         int maxLen = 0;
+
+//         for (int i = 0; i < n; i++) {
+           
+//             Set<Integer> seen = new HashSet<>();
+//             int cnt = 0;
+
+           
+//             for (int j = i; j >= 0; j--) {
+                
+//                 if (!seen.contains(nums[j])) {
+//                     seen.add(nums[j]);
+                    
+//                     if (nums[j] % 2 == 0) {
+//                         cnt++;
+//                     } else {
+//                         cnt--;
+//                     }
+//                 }
+//                 // Note: Agar 'seen' me pehle se hai, to hum count update nahi karenge
+//                 // kyunki Distinct Count chahiye. Par loop chalega aur length badhegi.
+
+//                 // Ab check karo: Kya is point par (j se i tak) mamla balanced hai?
+//                 if (cnt == 0) {
+//                     maxLen = Math.max(maxLen, i - j + 1);
+//                 }
+//             }
+//         }
+
+//         return maxLen;
+//     }
+// }
+
+
+
+
+
+
+
+// now lets optimise this code...usse phle.. isi ko thoda behtar soch skte ki ab aise krenge ki .... jab bhi mujhe koi seen milega to vha index tak sabme phle hi iska jo effect hai (+1/-1) uska oppositve vha pr jakar mark kr dunga taki fir mai pure hi aise me vo add kr sku to fir jab bhi mile phle 0 milega vhi se length nikal lenge 
+
+// class Solution {
+//     public int longestBalanced(int[] nums) {
+//         int n = nums.length;
+//         int maxLen = 0;
+//         int sum [] = new int[n];
+//         Map<Integer, Integer> map = new HashMap<>();
+//         map.put(0,-1);
+
+
+//         for (int i = 0; i < n; i++) {
+
+//             int val = nums[i]  % 2 == 0? +1 : -1; 
+//             int prev = -1;
+//             if (map.containsKey(nums[i])) {
+//                prev = map.get(nums[i]);
+//             }
+            
+//             for (int j = 0; j<= prev; j++){
+//                 sum[j] -= val;
+//             }
+//             for(int j = 0; j<=i; j++){
+//                 sum[j] += val;
+//             }
+//             for(int j = 0; j<=i; j++){
+//                 if(sum[j] == 0){
+//                     maxLen = Math.max(maxLen, i-j+1);
+//                     break;
+//                 }
+//             }
+            
+//             map.put(nums[i],i);
+
+//         }        
+//         return maxLen;
+//     }
+// }
+
+
+// now lets optimise this .....................
+
+
+
 
 class Solution {
-    class SegmentTree {
-        int[] minVal, maxVal, lazy;
-        int n;
 
-        public SegmentTree(int n) {
+    class SegmentTree {
+        int n;
+        int[] lazy, max, min;
+
+        SegmentTree(int n) {
             this.n = n;
-            minVal = new int[4 * n];
-            maxVal = new int[4 * n];
             lazy = new int[4 * n];
+            max = new int[4 * n];
+            min = new int[4 * n];
         }
 
-        void push(int node) {
-            if (lazy[node] != 0) {
-                
-                lazy[2 * node] += lazy[node];
-                minVal[2 * node] += lazy[node];
-                maxVal[2 * node] += lazy[node];
+        void propagate(int idx) {
+            if (lazy[idx] != 0) {
+                lazy[2 * idx + 1] += lazy[idx];
+                max[2 * idx + 1] += lazy[idx];
+                min[2 * idx + 1] += lazy[idx];
 
-                lazy[2 * node + 1] += lazy[node];
-                minVal[2 * node + 1] += lazy[node];
-                maxVal[2 * node + 1] += lazy[node];
+                lazy[2 * idx + 2] += lazy[idx];
+                max[2 * idx + 2] += lazy[idx];
+                min[2 * idx + 2] += lazy[idx];
 
-                lazy[node] = 0;
+                lazy[idx] = 0;
             }
         }
 
-        void update(int node, int start, int end, int l, int r, int val) {
-            if (start > end || start > r || end < l) return;
-
-            if (start >= l && end <= r) {
-                lazy[node] += val;
-                minVal[node] += val;
-                maxVal[node] += val;
+        void updateRange(int idx, int nodeLeft, int nodeRight, int start, int end, int val) {
+            if (nodeLeft > end || nodeRight < start) {
                 return;
             }
 
-            push(node);
-            int mid = (start + end) / 2;
-            update(2 * node, start, mid, l, r, val);
-            update(2 * node + 1, mid + 1, end, l, r, val);
+            if (nodeLeft >= start && nodeRight <= end) {
+                lazy[idx] += val;
+                max[idx] += val;
+                min[idx] += val;
+                return;
+            }
 
-            minVal[node] = Math.min(minVal[2 * node], minVal[2 * node + 1]);
-            maxVal[node] = Math.max(maxVal[2 * node], maxVal[2 * node + 1]);
+            propagate(idx);
+            int mid = (nodeLeft + nodeRight) / 2;
+
+            updateRange(2 * idx + 1, nodeLeft, mid, start, end, val);
+            updateRange(2 * idx + 2, mid + 1, nodeRight, start, end, val);
+
+            max[idx] = Math.max(max[2 * idx + 1], max[2 * idx + 2]);
+            min[idx] = Math.min(min[2 * idx + 1], min[2 * idx + 2]);
         }
 
-        int queryFirstZero(int node, int start, int end, int searchEnd) {
-            if (start > searchEnd) return -1;
+        int findLeftMostZero(int idx, int nodeLeft, int nodeRight, int queryLimit) {
+           
+            if (min[idx] > 0 || max[idx] < 0) return -1;
+            
+            if (nodeLeft > queryLimit) return -1;
 
-            if (minVal[node] > 0 || maxVal[node] < 0) return -1;
+            if (nodeLeft == nodeRight) {
+                return (min[idx] == 0) ? nodeLeft : -1;
+            }
 
-            if (start == end) return start;
+            propagate(idx);
+            int mid = (nodeLeft + nodeRight) / 2;
 
-            push(node);
-            int mid = (start + end) / 2;
-
-            int res = queryFirstZero(2 * node, start, mid, searchEnd);
+            int res = findLeftMostZero(2 * idx + 1, nodeLeft, mid, queryLimit);
+            
             if (res != -1) return res;
-
-            return queryFirstZero(2 * node + 1, mid + 1, end, searchEnd);
+            
+            return findLeftMostZero(2 * idx + 2, mid + 1, nodeRight, queryLimit);
         }
     }
 
     public int longestBalanced(int[] nums) {
         int n = nums.length;
-        SegmentTree st = new SegmentTree(n);
-        Map<Integer, Integer> lastPos = new HashMap<>();
         int maxLen = 0;
+        
+        Map<Integer, Integer> map = new HashMap<>(); 
+        SegmentTree seg = new SegmentTree(n);
 
-        for (int right = 0; right < n; right++) {
-            int num = nums[right];
-            int prev = lastPos.getOrDefault(num, -1);
-            
+        for (int i = 0; i < n; i++) {
+            int val = (nums[i] % 2 == 0) ? 1 : -1;
 
-            int val = (num % 2 != 0) ? 1 : -1;
-
-      
-            st.update(1, 0, n - 1, prev + 1, right, val);
-            
-            lastPos.put(num, right);
-
-            int left = st.queryFirstZero(1, 0, n - 1, right);
-            
-            if (left != -1) {
-                maxLen = Math.max(maxLen, right - left + 1);
+            if (map.containsKey(nums[i])) {
+                int prev = map.get(nums[i]);
+                seg.updateRange(0, 0, n - 1, 0, prev, -val);
             }
+
+            seg.updateRange(0, 0, n - 1, 0, i, val);
+
+   
+            int j = seg.findLeftMostZero(0, 0, n - 1, i);
+            
+            if (j != -1) {
+                maxLen = Math.max(maxLen, i - j + 1);
+            }
+
+            map.put(nums[i], i);
         }
+        
         return maxLen;
     }
 }
