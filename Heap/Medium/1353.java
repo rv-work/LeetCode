@@ -33,3 +33,38 @@ class Solution {
 
   }
 }
+
+
+
+
+
+class Solution {
+    public int maxEvents(int[][] events) {
+        Arrays.sort(events , (a,b) -> a[0]-b[0]); /// start time 
+        int n= events.length;
+        PriorityQueue<Integer> pq = new PriorityQueue<>(); // min end time....
+      
+        int day = 0;
+        int i = 0;
+        int cnt = 0;
+        while(i < n || !pq.isEmpty()){
+            while( i < n && events[i][0] == day){
+                pq.add(events[i][1]);
+                i++;
+            }
+            
+            while(!pq.isEmpty() && pq.peek() < day) pq.poll();
+
+            if(!pq.isEmpty()){
+                cnt++;
+                pq.poll();
+            }
+
+            day++;
+
+        }
+
+        return cnt;
+
+    }
+}
