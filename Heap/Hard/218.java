@@ -267,3 +267,71 @@ class Solution {
         return ans;
     }
 }
+
+
+
+
+
+
+
+
+
+class Solution {
+    public List<List<Integer>> getSkyline(int[][] buildings) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<int[]> points = new ArrayList<>();
+
+        // Step 1: Same as before - Start ko negative aur End ko positive
+        for (int[] b : buildings) {
+            points.add(new int[]{b[0], -b[2]});
+            points.add(new int[]{b[1], b[2]});
+        }
+
+        // Step 2: Same Sorting Logic (x coordinate pehle, fir height trick)
+        Collections.sort(points, (a, b) -> {
+            if (a[0] != b[0]) {
+                return a[0] - b[0];
+            }
+            return a[1] - b[1]; 
+        });
+
+        // Step 3: Use TreeMap instead of PQ <Height, Frequency>
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        map.put(0, 1); // Ground level hamesha active rahega (Height 0, Count 1)
+        
+        int prevMax = 0;
+
+        // Step 4: Sweep Line
+        for (int[] p : points) {
+            int x = p[0];
+            int h = p[1];
+
+            if (h < 0) {
+                // START Event: Height add karo ya count badhao
+                int height = -h; // asli height nikali
+                map.put(height, map.getOrDefault(height, 0) + 1);
+            } else {
+                // END Event: Height ka count kam karo
+                int count = map.get(h);
+                if (count == 1) {
+                    // Agar ek hi building thi is height ki, to map se hi hata do
+                    map.remove(h);
+                } else {
+                    // Varna bas count - 1 kar do
+                    map.put(h, count - 1);
+                }
+            }
+
+            // Current Max Height = TreeMap ki sabse badi Key (lastKey)
+            int currMax = map.lastKey();
+
+            // Agar Raja (Max Height) badal gaya hai, to Skyline me add karo
+            if (currMax != prevMax) {
+                ans.add(Arrays.asList(x, currMax));
+                prevMax = currMax;
+            }
+        }
+
+        return ans;
+    }
+}
