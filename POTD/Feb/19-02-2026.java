@@ -126,3 +126,41 @@ class Solution {
 // If Groups are large (the Inner loop runs many times), then the Transitions will be few (the Outer loop runs very few times).
 
 // You cannot maximize both at the same time—or as the saying goes, "You can't have your cake and eat it too."
+
+
+
+
+
+
+
+
+class Solution {
+    public int countBinarySubstrings(String s) {
+        int n = s.length();
+        if (n <= 1) return 0;
+
+        // Step 1: Har group ki length ko store karne ke liye list
+        List<Integer> groups = new ArrayList<>();
+        int currentGroupLen = 1;
+
+        for (int i = 1; i < n; i++) {
+            if (s.charAt(i) == s.charAt(i - 1)) {
+                currentGroupLen++;
+            } else {
+                // Number badal gaya, purane group ki length add karo
+                groups.add(currentGroupLen);
+                currentGroupLen = 1;
+            }
+        }
+        // Last group ko add karna mat bhulna
+        groups.add(currentGroupLen);
+
+        // Step 2: Padosi groups ka min nikal kar sum karo
+        int count = 0;
+        for (int i = 1; i < groups.size(); i++) {
+            count += Math.min(groups.get(i - 1), groups.get(i));
+        }
+
+        return count;
+    }
+}
