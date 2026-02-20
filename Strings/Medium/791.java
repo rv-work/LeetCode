@@ -35,3 +35,40 @@ class Solution {
         return ans.toString();
     }
 }
+
+
+
+
+
+
+
+
+class Solution {
+    public String customSortString(String order, String s) {
+        // Count frequency of each character in s
+        int[] freq = new int[26];
+        for (char c : s.toCharArray()) {
+            freq[c - 'a']++;
+        }
+
+        StringBuilder ans = new StringBuilder();
+
+        // First, add characters that appear in 'order'
+        for (char c : order.toCharArray()) {
+            while (freq[c - 'a'] > 0) {
+                ans.append(c);
+                freq[c - 'a']--;
+            }
+        }
+
+        // Then, add remaining characters not present in order
+        for (char c = 'a'; c <= 'z'; c++) {
+            while (freq[c - 'a'] > 0) {
+                ans.append(c);
+                freq[c - 'a']--;
+            }
+        }
+
+        return ans.toString();
+    }
+}
