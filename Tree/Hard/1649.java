@@ -164,3 +164,90 @@ class Solution {
         return p1 + p2;
     }
 }
+
+
+
+
+
+
+
+
+class Solution {
+    int[] less;
+    int[] greater;
+
+    void mergeSort(int[][] arr, int left, int right) {
+        if (left >= right) return;
+
+        int mid = left + (right - left) / 2;
+
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+
+        merge(arr, left, mid, right);
+    }
+
+    void merge(int[][] arr, int left, int mid, int right) {
+        int pLess = left;
+        int pGreater = left;
+
+        // Right half ke har element ke liye left half me check karenge
+        for (int i = mid + 1; i <= right; i++) {
+            // 1. Strictly Less count karo
+            // Jab tak left ka element chhota hai, pointer aage badhao
+            while (pLess <= mid && arr[pLess][0] < arr[i][0]) {
+                pLess++;
+            }
+            // pLess - left = Total elements in left half strictly less than arr[i]
+            less[arr[i][1]] += (pLess - left);
+
+            // 2. Strictly Greater count karo
+            // Jab tak left ka element chhota ya barabar hai, pointer aage badhao
+            while (pGreater <= mid && arr[pGreater][0] <= arr[i][0]) {
+                pGreater++;
+            }
+            greater[arr[i][1]] += (mid - pGreater + 1);
+        }
+
+        int[][] temp = new int[right - left + 1][2];
+        int i = left, j = mid + 1, k = 0;
+
+        while (i <= mid && j <= right) {
+            if (arr[i][0] <= arr[j][0]) {
+                temp[k++] = arr[i++];
+            } else {
+                temp[k++] = arr[j++];
+            }
+        }
+
+        while (i <= mid) temp[k++] = arr[i++];
+        while (j <= right) temp[k++] = arr[j++];
+
+        for (int p = 0; p < temp.length; p++) {
+            arr[left + p] = temp[p];
+        }
+    }
+
+    public int createSortedArray(int[] instructions) {
+        int n = instructions.length;
+        less = new int[n];
+        greater = new int[n];
+        
+        int[][] arr = new int[n][2];
+        for (int i = 0; i < n; i++) {
+            arr[i][0] = instructions[i];
+            arr[i][1] = i;
+        }
+
+        mergeSort(arr, 0, n - 1);
+
+        long cost = 0;
+        int MOD = 1000000007;
+
+        for (int i = 0; i < n; i++) {
+            cost = (cost + Math.min(less[i], greater[i])) % MOD;
+        }
+
+        return (int) cost;
+    }
+}
