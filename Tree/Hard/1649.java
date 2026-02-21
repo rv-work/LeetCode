@@ -251,3 +251,45 @@ class Solution {
         return (int) cost;
     }
 }
+
+
+
+
+class Solution {
+    int MAX = 100000;    
+    int MOD = 1000000007;
+    int[] bit = new int[MAX + 2];
+
+    void update(int idx, int val) {
+        while (idx <= MAX) {
+            bit[idx] += val;
+            idx += idx & -idx;
+        }
+    }
+
+    int sum(int idx) {
+        int s = 0;
+        while (idx > 0) {
+            s += bit[idx];
+            idx -= idx & -idx;
+        }
+        return s;
+    }
+
+    public int createSortedArray(int[] instructions) {
+
+        long total = 0;
+
+        for (int x : instructions) {
+            int less = sum(x - 1);
+
+            int big = sum(MAX) - sum(x);
+
+            total = (total + Math.min(less, big)) % MOD;
+
+            update(x, 1);
+        }
+
+        return (int) total;
+    }
+}
