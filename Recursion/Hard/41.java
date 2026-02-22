@@ -85,8 +85,8 @@ class Solution {
 
         for (int col = 0; col < n; col++) {
 
-            int d1 = row + col;            // major diagonal (\)
-            int d2 = row - col;            // minor diagonal (/)
+            int d1 = row + col;            // major diagonal (/)
+            int d2 = row - col;            // minor diagonal (\)
 
             // if any attack present → skip
             if (cols.contains(col) || diag1.contains(d1) || diag2.contains(d2))
