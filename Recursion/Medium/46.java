@@ -1,3 +1,4 @@
+package Medium;
 class Solution {
 
     void res(List<List<Integer>> ans, int[] nums, int n, List<Integer> li) {
