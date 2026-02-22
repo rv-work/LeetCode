@@ -60,3 +60,68 @@ class Solution {
         return ans;
     }
 }
+
+
+
+
+
+
+
+
+class Solution {
+
+    void solve(int row, int n, char[][] board,
+               Set<Integer> cols,
+               Set<Integer> diag1,
+               Set<Integer> diag2,
+               List<List<String>> ans) {
+
+        if (row == n) {
+            List<String> curr = new ArrayList<>();
+            for (char[] r : board) curr.add(new String(r));
+            ans.add(curr);
+            return;
+        }
+
+        for (int col = 0; col < n; col++) {
+
+            int d1 = row + col;            // major diagonal (\)
+            int d2 = row - col;            // minor diagonal (/)
+
+            // if any attack present → skip
+            if (cols.contains(col) || diag1.contains(d1) || diag2.contains(d2))
+                continue;
+
+            // place queen
+            board[row][col] = 'Q';
+            cols.add(col);
+            diag1.add(d1);
+            diag2.add(d2);
+
+            // next row
+            solve(row + 1, n, board, cols, diag1, diag2, ans);
+
+            // backtrack
+            board[row][col] = '.';
+            cols.remove(col);
+            diag1.remove(d1);
+            diag2.remove(d2);
+        }
+    }
+
+    public List<List<String>> solveNQueens(int n) {
+
+        char[][] board = new char[n][n];
+        for (int i = 0; i < n; i++) Arrays.fill(board[i], '.');
+
+        Set<Integer> cols = new HashSet<>();
+        Set<Integer> diag1 = new HashSet<>();      // row + col
+        Set<Integer> diag2 = new HashSet<>();      // row - col
+
+        List<List<String>> ans = new ArrayList<>();
+
+        solve(0, n, board, cols, diag1, diag2, ans);
+
+        return ans;
+    }
+}
