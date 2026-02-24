@@ -36,3 +36,34 @@ class Solution {
         return false;
     }
 }
+
+
+
+
+
+
+
+
+
+class Solution {
+    public boolean hasAllCodes(String s, int k) {
+        if (s.length() < k) {
+            return false;
+        }
+
+        HashSet<String> set = new HashSet<>();
+
+        // Har index se size 'k' ki substring nikalo
+        for (int i = 0; i <= s.length() - k; i++) {
+            set.add(s.substring(i, i + k));
+            
+            // Optimization: Agar beech me hi saare codes mil gaye, to loop rok do
+            if (set.size() == (1 << k)) {
+                return true;
+            }
+        }
+
+        // Last me check karo ki kya total unique codes 2^k hain?
+        return set.size() == (1 << k);
+    }
+}
