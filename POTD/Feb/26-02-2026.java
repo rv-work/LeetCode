@@ -89,3 +89,36 @@ class Solution {
         return steps;
     }
 }
+
+
+
+
+
+class Solution {
+    public int numSteps(String s) {
+        int steps = 0;
+        int carry = 0;
+        
+        // Loop ko index 1 tak hi chalayenge, kyunki index 0 MSB (Most Significant Bit) hai
+        // Jise aakhri me handle karna asaan hota hai.
+        for (int i = s.length() - 1; i > 0; i--) {
+            int bit = s.charAt(i) - '0';
+            
+            if (bit + carry == 1) {
+                // Number odd ban gaya hai. 
+                // Step 1: Add 1 (carry 1 ho jayega)
+                // Step 2: Divide by 2 (shift right)
+                steps += 2;
+                carry = 1;
+            } else {
+                // Number even hai (ya to 0+0=0, ya fir 1+1=2)
+                // Sirf Divide by 2 (shift right) ka 1 step lagega
+                steps += 1;
+            }
+        }
+        
+        // Aakhri me agar carry 1 bacha hai, matlab pehla '1' ab '10' ban chuka hai
+        // To use '1' banane ke liye 1 step (divide by 2) aur lagega
+        return steps + carry;
+    }
+}
