@@ -45,3 +45,69 @@ class Solution {
         return res;
     }
 }
+
+
+
+
+// ------------------------------------------------------------
+// GRAND SUMMARY — SUM OF DISTANCES IN TREE (Re-rooting DP)
+// ------------------------------------------------------------
+
+// Goal: For every node, compute sum of distances to all other nodes
+//       in O(N) using two DFS passes.
+
+// ------------------------------------------------------------
+// 1) Data Structures:
+//    res[node]   = final answer for each node (sum of distances)
+//    count[node] = size of subtree of 'node' (including itself)
+//    tree        = adjacency list representation of the tree
+// ------------------------------------------------------------
+
+// ------------------------------------------------------------
+// 2) First DFS (dfsBase) — Post-order (Bottom-Up):
+//    Purpose:
+//      - Compute subtree sizes (count[node])
+//      - Compute sum of distances from root (0) to all nodes
+//
+//    Steps:
+//      count[node] = 1 (count itself)
+//      For each child:
+//         - Recursively solve child
+//         - Add child subtree size to current count
+//         - Add child's res + subtree size to current res
+//
+//    Meaning of:
+//      res[node] += res[child] + count[child]
+//      -> Every node in child's subtree is 1 step further from "node"
+//         than from "child"
+// ------------------------------------------------------------
+
+// ------------------------------------------------------------
+// 3) After dfsBase:
+//    res[0] contains sum of distances from root (0) to all nodes
+//    count[] contains subtree sizes for every node
+// ------------------------------------------------------------
+
+// ------------------------------------------------------------
+// 4) Second DFS (dfsReroot) — Pre-order (Top-Down):
+//    Purpose:
+//      - Reroot the tree at every child
+//      - Compute res[child] from res[parent] in O(1)
+//
+//    Formula:
+//      res[child] = res[node] - count[child] + (n - count[child])
+//
+//    Explanation:
+//      - Moving root from "node" to its child:
+//          Nodes in child's subtree → distance decreases by 1
+//          Nodes outside subtree   → distance increases by 1
+//
+//      - count[child] = subtree size
+//      - (n - count[child]) = nodes outside that subtree
+// ------------------------------------------------------------
+
+// ------------------------------------------------------------
+// 5) After dfsReroot:
+//    res[i] contains sum of distances from node i to all nodes.
+//    Entire solution runs in O(N) time.
+// ------------------------------------------------------------
