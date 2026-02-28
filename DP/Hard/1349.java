@@ -50,10 +50,6 @@ class Solution {
 
 
 
-
-
-
-
 class Solution {
     int res(int[] brokenRows, int[][] dp, int row, int prevMask, int m) {
         int n = dp.length;
@@ -63,14 +59,14 @@ class Solution {
 
         int maxStudents = 0; 
 
-        for (int currMask = 0; currMask < (1 << m); currMask++) {
+        for (int currMask = 0; currMask < (1 << m); currMask++) { // trying all the possibilities going from 000..00 to 111..11... like this 
 
-            if ((currMask & (currMask >> 1)) != 0) continue;
+            if ((currMask & (currMask >> 1)) != 0) continue; // ye btata hai ki koi bhi 2 .. 1s sath me to nhi
             
-            if ((currMask & brokenRows[row]) != 0) continue;
+            if ((currMask & brokenRows[row]) != 0) continue; // this one tells ki jha tum bithana chahte ho(1 krna chahte ho vha phle se to 1 ( broken ) nhi hai )
             
-            if ((currMask & (prevMask >> 1)) != 0) continue;
-            if ((currMask & (prevMask << 1)) != 0) continue;
+            if ((currMask & (prevMask >> 1)) != 0) continue; // shadow on the next place to crash btayega
+            if ((currMask & (prevMask << 1)) != 0) continue; // shadow on the prev place to crash btayega
 
             int cnt = Integer.bitCount(currMask);
             
