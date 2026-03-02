@@ -30,3 +30,27 @@ class Solution {
 }
 
 
+
+
+
+
+
+class Solution {
+    public int hIndex(int[] c) {
+        int n = c.length;
+        int[] freq = new int[n + 1];
+
+        // Count frequencies, cap values > n
+        for (int x : c) {
+            if (x >= n) freq[n]++;
+            else freq[x]++;
+        }
+
+        int papers = 0;
+        for (int i = n; i >= 0; i--) {
+            papers += freq[i];
+            if (papers >= i) return i;
+        }
+        return 0;
+    }
+}
