@@ -21,3 +21,28 @@ class Solution {
         return "";
     }
 }
+
+
+
+
+
+
+class Solution {
+    public String findDifferentBinaryString(String[] nums) {
+        int n = nums.length;
+
+        Set<Integer> set = new HashSet<>();
+        for(String s : nums)
+            set.add(Integer.parseInt(s,2));
+
+        for(int i=0;i<(1<<n);i++){
+            if(!set.contains(i)){
+                String ans = Integer.toBinaryString(i);
+                while(ans.length() < n)
+                    ans = "0" + ans;
+                return ans;
+            }
+        }
+        return "";
+    }
+}
