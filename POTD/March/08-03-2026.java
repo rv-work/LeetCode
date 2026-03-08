@@ -1,0 +1,23 @@
+class Solution {
+    public String findDifferentBinaryString(String[] nums) {
+        int n = nums.length;
+        Set<String> set = new HashSet<>();
+        for(String str  : nums){
+            set.add(str);
+        }
+
+        int max = (1<<n);
+
+        for(int i = 0; i<max; i++){
+            StringBuilder str = new StringBuilder();
+            int num = i;
+            for(int j = 0; j<n; j++){
+                num >>=j;
+                str.append( (num&1) );
+            }
+            if(!set.contains(str.toString())) return str.toString();
+        }
+
+        return "";
+    }
+}
