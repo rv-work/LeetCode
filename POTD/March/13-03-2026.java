@@ -62,3 +62,34 @@ class Solution {
         return ans;
     }
 }
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public long minNumberOfSeconds(int mh, int[] wt) {
+        PriorityQueue<long []> pq = new PriorityQueue<>
+        ((a,b) -> Long.compare(a[0]*a[2]+1+a[1] , b[0]*b[2]+1+b[1]));
+
+        long ans = Long.MIN_VALUE;
+
+        for(int time : wt) pq.add(new long[]{time , 0 , 1});
+
+        while(mh-- != 0){
+            long top[] = pq.poll();
+            long time = top[0]*top[2]+top[1];
+            top[1] = time; 
+            top[2]++; 
+            pq.add(top);
+            ans = Math.max(ans ,time);
+        }
+
+        return ans;
+    }
+}
